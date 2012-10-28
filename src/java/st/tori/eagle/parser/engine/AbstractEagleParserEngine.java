@@ -9,11 +9,12 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import st.tori.eagle.parser.dtd.DTDEntity.FileType;
 import st.tori.eagle.parser.exception.EagleParserException;
 
 public abstract class AbstractEagleParserEngine {
 
-	protected abstract void parse(InputStream bis);
+	protected abstract void parse(FileType fileType, InputStream bis);
 
 	public void parse(File file) throws EagleParserException {
 		if(file==null)
@@ -24,12 +25,19 @@ public abstract class AbstractEagleParserEngine {
 		if(fileName==null)
 			throw new EagleParserException("fileName is null:"+file.getAbsolutePath());
 		fileName = fileName.toLowerCase();
-		if(!fileName.endsWith(".brd")&&!fileName.endsWith(".sch"))
+		FileType fileType;
+		if(fileName.endsWith(".brd"))
+			fileType = FileType.brd;
+		else if(fileName.endsWith(".sch"))
+			fileType = FileType.sch;
+		else if(fileName.endsWith(".lbr"))
+			fileType = FileType.lbr;
+		else
 			throw new EagleParserException("only BRD or SCH file:"+file.getAbsolutePath());
 		ByteArrayInputStream bis;
 		try {
 			bis = getDTDReplacedInputStream(file);
-			parse(bis);
+			parse(fileType,bis);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new EagleParserException("cannot read file:"+file.getAbsolutePath());

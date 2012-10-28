@@ -8,10 +8,12 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+import st.tori.eagle.parser.dtd.DTDEntity.FileType;
+
 public class EagleParserEngineSAX extends AbstractEagleParserEngine {
 
 	@Override
-	public void parse(InputStream is) {
+	public void parse(FileType fileType, InputStream is) {
 		try {
 			SAXParserFactory spfactory = SAXParserFactory.newInstance();
 			spfactory.setValidating(true);

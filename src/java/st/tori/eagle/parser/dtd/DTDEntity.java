@@ -1,7 +1,11 @@
 package st.tori.eagle.parser.dtd;
 
-public class Entity {
+public class DTDEntity {
 
+	public enum FileType {
+		lbr,brd,sch,
+	}
+	
 	public enum GridUnit {
 		mic(1),mm(1),mil(1),inch(1);
 		
@@ -215,5 +219,5 @@ public class Entity {
 		if("down".equals(str))return VerticalText.down;
 		return null;
 	}
-	
+
 }
