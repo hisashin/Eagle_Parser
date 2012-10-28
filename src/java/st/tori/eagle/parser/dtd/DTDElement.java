@@ -24,7 +24,21 @@ public class DTDElement {
 		List<Setting> settings = new ArrayList<Setting>();
 		Grid grid;
 		List<Layer> layers = new ArrayList<Layer>();
+		Library library;
+		Schematic schematic;
+		Board board;
 	}
+	public static interface FileTypeInterface {}
+	public static class Library implements FileTypeInterface {
+		
+	}
+	public static class Schematic implements FileTypeInterface {
+		
+	}
+	public static class Board implements FileTypeInterface {
+		
+	}
+	
 	
 	public static class Variantdef {
 		

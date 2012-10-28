@@ -3,7 +3,7 @@ package st.tori.eagle.parser.dtd;
 public class DTDEntity {
 
 	public enum FileType {
-		lbr,brd,sch,
+		library,schematic,board,
 	}
 	
 	public enum GridUnit {

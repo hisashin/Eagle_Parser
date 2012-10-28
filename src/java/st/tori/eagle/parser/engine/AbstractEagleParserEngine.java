@@ -27,13 +27,13 @@ public abstract class AbstractEagleParserEngine {
 		fileName = fileName.toLowerCase();
 		FileType fileType;
 		if(fileName.endsWith(".brd"))
-			fileType = FileType.brd;
+			fileType = FileType.board;
 		else if(fileName.endsWith(".sch"))
-			fileType = FileType.sch;
+			fileType = FileType.schematic;
 		else if(fileName.endsWith(".lbr"))
-			fileType = FileType.lbr;
+			fileType = FileType.library;
 		else
-			throw new EagleParserException("only BRD or SCH file:"+file.getAbsolutePath());
+			throw new EagleParserException("not lbr/brd/sch file:"+file.getAbsolutePath());
 		ByteArrayInputStream bis;
 		try {
 			bis = getDTDReplacedInputStream(file);
