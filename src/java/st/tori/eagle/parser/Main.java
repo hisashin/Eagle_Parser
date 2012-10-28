@@ -1,12 +1,26 @@
 package st.tori.eagle.parser;
 
-public class Main {
+import java.io.File;
+
+import org.xml.sax.helpers.DefaultHandler;
+
+import st.tori.eagle.parser.engine.AbstractEagleParserEngine;
+import st.tori.eagle.parser.engine.EagleParserEngineFactory;
+import st.tori.eagle.parser.exception.EagleParserException;
+
+public class Main extends DefaultHandler {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("Hello Eagle");
+		AbstractEagleParserEngine engine = EagleParserEngineFactory.newInstance();
+		try {
+			engine.parse(new File("doc/HARPY_SMD.brd"));
+			engine.parse(new File("doc/HARPY_SMD.sch"));
+		} catch (EagleParserException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
