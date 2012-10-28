@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.sun.tools.internal.ws.wsdl.framework.Entity;
+
 import st.tori.eagle.parser.engine.AbstractEagleParserEngine;
 import st.tori.eagle.parser.engine.EagleParserEngineFactory;
 import st.tori.eagle.parser.exception.EagleParserException;
