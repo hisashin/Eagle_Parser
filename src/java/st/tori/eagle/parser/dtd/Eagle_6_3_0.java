@@ -232,59 +232,59 @@ public class Eagle_6_3_0 {
 	//----------------------------------------
 
 	public static class Eagle {
-		List<Compatibility> compatibilityList = new ArrayList<Compatibility>();
-		Drawing drawing;
+		public List<Compatibility> compatibilityList = new ArrayList<Compatibility>();
+		public Drawing drawing;
 		//	attr
-		double version;
+		public double version;
 	}
 	public static class Compatibility {
-		List<Note> noteList = new ArrayList<Note>();
+		public List<Note> noteList = new ArrayList<Note>();
 	}
 	public static class Note {
-		String value;
+		public String value;
 		//	attr
-		double version;
-		Severity severity;
+		public double version;
+		public Severity severity;
 	}
 	public static class Drawing {
-		List<Setting> settings = new ArrayList<Setting>();
-		Grid grid;
-		List<Layer> layers = new ArrayList<Layer>();
-		DrawingInterface content;
+		public List<Setting> settings = new ArrayList<Setting>();
+		public Grid grid;
+		public List<Layer> layers = new ArrayList<Layer>();
+		public DrawingInterface content;
 	}
 	public static interface DrawingInterface {}
 	public static class Library implements DrawingInterface {
-		Description description;
-		List<Package> packages = new ArrayList<Package>();
-		List<Symbol> symbols = new ArrayList<Symbol>();
-		List<Deviceset> devicesets = new ArrayList<Deviceset>();
+		public Description description;
+		public List<Package> packages = new ArrayList<Package>();
+		public List<Symbol> symbols = new ArrayList<Symbol>();
+		public List<Deviceset> devicesets = new ArrayList<Deviceset>();
 		//	attr
-		String name;
+		public String name;
 	}
 	public static class Schematic implements DrawingInterface {
-		Description description;
-		List<Library> libraries = new ArrayList<Library>();
-		List<Attribute> attributes = new ArrayList<Attribute>();
-		List<Variantdef> variantdefs = new ArrayList<Variantdef>();
-		List<Class> classes = new ArrayList<Class>();
-		List<Part> parts = new ArrayList<Part>();
-		List<Sheet> sheets = new ArrayList<Sheet>();
-		List<Error> errors = new ArrayList<Error>();
+		public Description description;
+		public List<Library> libraries = new ArrayList<Library>();
+		public List<Attribute> attributes = new ArrayList<Attribute>();
+		public List<Variantdef> variantdefs = new ArrayList<Variantdef>();
+		public List<Class> classes = new ArrayList<Class>();
+		public List<Part> parts = new ArrayList<Part>();
+		public List<Sheet> sheets = new ArrayList<Sheet>();
+		public List<Error> errors = new ArrayList<Error>();
 		//	attr
-		String xreflabel;
-		String xrefpart;
+		public String xreflabel;
+		public String xrefpart;
 	}
 	public static class Board implements DrawingInterface {
-		Description description;
-		List<PlainInterface> plainList = new ArrayList<PlainInterface>();
-		List<Library> libraries = new ArrayList<Library>();
-		List<Attribute> attributes = new ArrayList<Attribute>();
-		List<Variantdef> variantdefs = new ArrayList<Variantdef>();
-		List<Class> classes = new ArrayList<Class>();
-		Designrules designrules;
-		List<Pass> autorouter = new ArrayList<Pass>();
-		List<Element> elements = new ArrayList<Element>();
-		List<Signal> signals = new ArrayList<Signal>();
+		public Description description;
+		public List<PlainInterface> plainList = new ArrayList<PlainInterface>();
+		public List<Library> libraries = new ArrayList<Library>();
+		public List<Attribute> attributes = new ArrayList<Attribute>();
+		public List<Variantdef> variantdefs = new ArrayList<Variantdef>();
+		public List<Class> classes = new ArrayList<Class>();
+		public Designrules designrules;
+		public List<Pass> autorouter = new ArrayList<Pass>();
+		public List<Element> elements = new ArrayList<Element>();
+		public List<Signal> signals = new ArrayList<Signal>();
 		List<Approved> errors = new ArrayList<Approved>();
 	}
 	
@@ -293,59 +293,59 @@ public class Eagle_6_3_0 {
 	//----------------------------------------
 
 	public static class Sheet {
-		Description description;
-		List<PlainInterface> plainList = new ArrayList<PlainInterface>();
-		List<Instance> instances = new ArrayList<Instance>();
-		List<Bus> busses = new ArrayList<Bus>();
-		List<Net> nets = new ArrayList<Net>();
+		public Description description;
+		public List<PlainInterface> plainList = new ArrayList<PlainInterface>();
+		public List<Instance> instances = new ArrayList<Instance>();
+		public List<Bus> busses = new ArrayList<Bus>();
+		public List<Net> nets = new ArrayList<Net>();
 	}
 	public static class Package {
-		Description description;
-		List<PlainInterface> elements = new ArrayList<PlainInterface>();
+		public Description description;
+		public List<PlainInterface> elements = new ArrayList<PlainInterface>();
 		//	attr
-		String name;
+		public String name;
 	}
 	public static class Symbol extends Package {}
 	public static class Deviceset {
-		Description description;
-		List<Gate> gates = new ArrayList<Gate>();
-		List<Device> devices = new ArrayList<Device>();
+		public Description description;
+		public List<Gate> gates = new ArrayList<Gate>();
+		public List<Device> devices = new ArrayList<Device>();
 		//	attr
-		String name;
-		String prefix = "";
-		boolean uservalue = false;
+		public String name;
+		public String prefix = "";
+		public boolean uservalue = false;
 	}
 	public static class Device {
-		List<Connect> connects = new ArrayList<Connect>();
-		List<Technology> technologies = new ArrayList<Technology>();
+		public List<Connect> connects = new ArrayList<Connect>();
+		public List<Technology> technologies = new ArrayList<Technology>();
 		//	attr
-		String name;
-		String packageValue;
+		public String name;
+		public String packageValue;
 	}
 	public static class Bus {
-		List<Segment> segmentList = new ArrayList<Segment>();
+		public List<Segment> segmentList = new ArrayList<Segment>();
 		//	attr
-		String name;
+		public String name;
 	}
 	public static class Net extends Bus {
 		//	attr
-		int classValue = 0;
+		public int classValue = 0;
 	}
 	public static class Segment {
-		List<Pinref> pinrefList = new ArrayList<Pinref>();	//	only valid in a <net> context
-		List<Wire> wireList = new ArrayList<Wire>();	//	only valid in a <net> context
-		List<Junction> junctionList = new ArrayList<Junction>();
-		List<Label> labelList = new ArrayList<Label>();
+		public List<Pinref> pinrefList = new ArrayList<Pinref>();	//	only valid in a <net> context
+		public List<Wire> wireList = new ArrayList<Wire>();	//	only valid in a <net> context
+		public List<Junction> junctionList = new ArrayList<Junction>();
+		public List<Label> labelList = new ArrayList<Label>();
 	}
 	public static class Signal {
-		List<Contactref> contactrefList = new ArrayList<Contactref>();
-		List<Polygon> polygonList = new ArrayList<Polygon>();
-		List<Wire> wireList = new ArrayList<Wire>();
-		List<Via> viaList = new ArrayList<Via>();
+		public List<Contactref> contactrefList = new ArrayList<Contactref>();
+		public List<Polygon> polygonList = new ArrayList<Polygon>();
+		public List<Wire> wireList = new ArrayList<Wire>();
+		public List<Via> viaList = new ArrayList<Via>();
 		//	attr
-		String name;
-		int classValue = 0;
-		boolean airwireshidden = false;
+		public String name;
+		public int classValue = 0;
+		public boolean airwireshidden = false;
 	}
 	
 	//----------------------------------------
@@ -354,256 +354,256 @@ public class Eagle_6_3_0 {
 
 	public static class Variantdef {
 		//	attr
-		String name;
-		boolean current = false;
+		public String name;
+		public boolean current = false;
 	}
 	public static class Variant {
 		//	attr
-		String name;
-		boolean populate = true;
-		String value;
-		String technology;	//	Only in part context
+		public String name;
+		public boolean populate = true;
+		public String value;
+		public String technology;	//	Only in part context
 	}
 	public static class Gate {
 		//	attr
-		String name;
-		String symbol;
-		double x;
-		double y;
-		GateAddLevel addlevel = GateAddLevel.next;
-		int swaplevel = 0;
+		public String name;
+		public String symbol;
+		public double x;
+		public double y;
+		public GateAddLevel addlevel = GateAddLevel.next;
+		public int swaplevel = 0;
 	}
 	public static class Wire implements PlainInterface {
 		//	attr
-		double x1;
-		double y1;
-		double x2;
-		double y2;
-		double width;
-		Layer layer;
-		String extent;	//	Only applicable for airwires
-		WireStyle style = WireStyle.continuous;
-		double curve = 0;
-		WireCap cap = WireCap.round;	//	Only applicable if 'curve' is not zero
+		public double x1;
+		public double y1;
+		public double x2;
+		public double y2;
+		public double width;
+		public Layer layer;
+		public String extent;	//	Only applicable for airwires
+		public WireStyle style = WireStyle.continuous;
+		public double curve = 0;
+		public WireCap cap = WireCap.round;	//	Only applicable if 'curve' is not zero
 	}
 	public static class Dimension {
 		//	attr
-		double x1;
-		double y1;
-		double x2;
-		double y2;
-		double x3;
-		double y3;
-		Layer layer;
-		DimensionType dtype = DimensionType.parallel;
+		public double x1;
+		public double y1;
+		public double x2;
+		public double y2;
+		public double x3;
+		public double y3;
+		public Layer layer;
+		public DimensionType dtype = DimensionType.parallel;
 	}
 	public static class Text implements PlainInterface {
-		String value;
+		public String value;
 		//	attr
-		double x;
-		double y;
-		double size;
-		Layer layer;
-		TextFont font = TextFont.proportional;
-		int ratio = 8;
-		Rotation rot = new Rotation("R0");
-		Align align = new Align("bottom-left");
-		int distance = 50;
+		public double x;
+		public double y;
+		public double size;
+		public Layer layer;
+		public TextFont font = TextFont.proportional;
+		public int ratio = 8;
+		public Rotation rot = new Rotation("R0");
+		public Align align = new Align("bottom-left");
+		public int distance = 50;
 	}
 	public static class Circle implements PlainInterface {
 		//	attr
-		double x;
-		double y;
-		double radius;
-		double width;
-		Layer layer;
+		public double x;
+		public double y;
+		public double radius;
+		public double width;
+		public Layer layer;
 	}
 	public static class Rectangle implements PlainInterface {
 		//	attr
-		double x1;
-		double y1;
-		double x2;
-		double y2;
-		Layer layer;
-		Rotation rot = new Rotation("R0");
+		public double x1;
+		public double y1;
+		public double x2;
+		public double y2;
+		public Layer layer;
+		public Rotation rot = new Rotation("R0");
 	}
 	public static class Frame implements PlainInterface {
 		//	attr
-		double x1;
-		double y1;
-		double x2;
-		double y2;
-		int columns;
-		int rows;
-		Layer layer;
-		boolean border_left = true;
-		boolean border_top = true;
-		boolean border_right = true;
-		boolean border_bottom = true;
+		public double x1;
+		public double y1;
+		public double x2;
+		public double y2;
+		public int columns;
+		public int rows;
+		public Layer layer;
+		public boolean border_left = true;
+		public boolean border_top = true;
+		public boolean border_right = true;
+		public boolean border_bottom = true;
 	}
 	public static class Hole implements PlainInterface {
 		//	attr
-		double x;
-		double y;
-		double drill;
+		public double x;
+		public double y;
+		public double drill;
 	}
 	public static class Pad implements PlainInterface {
 		//	attr
-		String name;
-		double x;
-		double y;
-		double drill;
-		double diameter = 0;
-		PadShape shape = PadShape.round;
-		Rotation rot = new Rotation("R0");
-		boolean stop = true;
-		boolean thermals = true;
-		boolean first = false;
+		public String name;
+		public double x;
+		public double y;
+		public double drill;
+		public double diameter = 0;
+		public PadShape shape = PadShape.round;
+		public Rotation rot = new Rotation("R0");
+		public boolean stop = true;
+		public boolean thermals = true;
+		public boolean first = false;
 	}
 	public static class Smd implements PlainInterface {
 		//	attr
-		String name;
-		double x;
-		double y;
-		double dx;
-		double dy;
-		Layer layer;
-		int roundness = 0;
-		Rotation rot = new Rotation("R0");
-		boolean stop = true;
-		boolean thermals = true;
-		boolean cream = true;
+		public String name;
+		public double x;
+		public double y;
+		public double dx;
+		public double dy;
+		public Layer layer;
+		public int roundness = 0;
+		public Rotation rot = new Rotation("R0");
+		public boolean stop = true;
+		public boolean thermals = true;
+		public boolean cream = true;
 	}
 	public static class Element {
-		List<Attribute> attributeList = new ArrayList<Attribute>();
-		List<Variant> variantList = new ArrayList<Variant>();
+		public List<Attribute> attributeList = new ArrayList<Attribute>();
+		public List<Variant> variantList = new ArrayList<Variant>();
 		//	attr
-		String name;
-		String library;
-		String packageValue;
-		String value;
-		double x;
-		double y;
-		boolean locked = false;
-		boolean smashed = false;
-		Rotation rot = new Rotation("R0");
+		public String name;
+		public String library;
+		public String packageValue;
+		public String value;
+		public double x;
+		public double y;
+		public boolean locked = false;
+		public boolean smashed = false;
+		public Rotation rot = new Rotation("R0");
 	}
 	public static class Via {
 		//	attr
-		double x;
-		double y;
-		String extent;
-		double drill;
-		double diameter = 0;
-		ViaShape shape = ViaShape.round;
-		boolean alwaysstop = false;
+		public double x;
+		public double y;
+		public String extent;
+		public double drill;
+		public double diameter = 0;
+		public ViaShape shape = ViaShape.round;
+		public boolean alwaysstop = false;
 	}
 	public static interface PlainInterface {}
 	public static class Polygon implements PlainInterface {
-		List<Vertex> vertextList = new ArrayList<Vertex>();	//	the vertexes must define a valid polygon; if the last vertex is the same as the first one, it is ignored
+		public List<Vertex> vertextList = new ArrayList<Vertex>();	//	the vertexes must define a valid polygon; if the last vertex is the same as the first one, it is ignored
 		//	attr
-		double width;
-		Layer layer;
-		double spacing;
-		PolygonPour pour = PolygonPour.solid;
-		double isolate;	//	Only in <signal> or <package> context
-		boolean orphans = false;	//	Only in <signal> context
-		boolean thermals = true;	//	Only in <signal> context
-		int rank = 0;	//	1..6 in <signal> context,0 or 7 in <package> context
+		public double width;
+		public Layer layer;
+		public double spacing;
+		public PolygonPour pour = PolygonPour.solid;
+		public double isolate;	//	Only in <signal> or <package> context
+		public boolean orphans = false;	//	Only in <signal> context
+		public boolean thermals = true;	//	Only in <signal> context
+		public int rank = 0;	//	1..6 in <signal> context,0 or 7 in <package> context
 	}
 	public static class Vertex {
 		//	attr
-		double x;
-		double y;
-		double curve = 0;	//	The curvature from this vertext to the next one
+		public double x;
+		public double y;
+		public double curve = 0;	//	The curvature from this vertext to the next one
 	}
 	public static class Pin {
 		//	attr
-		String name;
-		double x;
-		double y;
-		PinVisible visible = PinVisible.both;
-		PinLength length = PinLength.longLength;
-		PinDirection direction = PinDirection.io;
-		PinFunction function = PinFunction.none;
-		int swaplevel = 0;
-		Rotation rot = new Rotation("R0");
+		public String name;
+		public double x;
+		public double y;
+		public PinVisible visible = PinVisible.both;
+		public PinLength length = PinLength.longLength;
+		public PinDirection direction = PinDirection.io;
+		public PinFunction function = PinFunction.none;
+		public int swaplevel = 0;
+		public Rotation rot = new Rotation("R0");
 	}
 	public static class Part {
-		List<Attribute> attributeList = new ArrayList<Attribute>();
-		List<Variant> variantList = new ArrayList<Variant>();
+		public List<Attribute> attributeList = new ArrayList<Attribute>();
+		public List<Variant> variantList = new ArrayList<Variant>();
 		//	attr
-		String name;
-		String library;
-		String deviceset;
-		String device;
-		String technology = "";
-		String value;
+		public String name;
+		public String library;
+		public String deviceset;
+		public String device;
+		public String technology = "";
+		public String value;
 	}
 	public static class Instance {
-		List<Attribute> attributeList = new ArrayList<Attribute>();
+		public List<Attribute> attributeList = new ArrayList<Attribute>();
 		//	attr
-		String part;
-		String gate;
-		double x;
-		double y;
-		boolean smashed = false;
-		Rotation rot = new Rotation("R0");	//	Only 0,90,180 or 270
+		public String part;
+		public String gate;
+		public double x;
+		public double y;
+		public boolean smashed = false;
+		public Rotation rot = new Rotation("R0");	//	Only 0,90,180 or 270
 	}
 	public static class Label {
 		//	attr
-		double x;
-		double y;
-		double size;
-		Layer layer;
-		TextFont font = TextFont.proportional;
-		int ratio = 8;
-		Rotation rot = new Rotation("R0");	//	Onlhy 0,90,180 or 270
-		boolean xref = false;	//	only in <net> context
+		public double x;
+		public double y;
+		public double size;
+		public Layer layer;
+		public TextFont font = TextFont.proportional;
+		public int ratio = 8;
+		public Rotation rot = new Rotation("R0");	//	Onlhy 0,90,180 or 270
+		public boolean xref = false;	//	only in <net> context
 	}
 	public static class Junction {
 		//	attr
-		double x;
-		double y;
+		public double x;
+		public double y;
 	}
 	public static class Connect {
 		//	attr
-		String gate;
-		String pin;
-		String pad;
-		ContactRoute route = ContactRoute.all;
+		public String gate;
+		public String pin;
+		public String pad;
+		public ContactRoute route = ContactRoute.all;
 	}
 	public static class Technology {
-		List<Attribute> attributeList = new ArrayList<Attribute>();
+		public List<Attribute> attributeList = new ArrayList<Attribute>();
 		//	attr
-		String name;
+		public String name;
 	}
 	public static class Attribute {
 		//	attr
-		String name;
-		String value;
-		double x;
-		double y;
-		double size;
-		Layer layer;
-		TextFont font;
-		int ratio;
-		Rotation rot = new Rotation("R0");
-		AttributeDisplay display = AttributeDisplay.value;	//	Only in <element> or <instance> context
-		boolean constant = false;	//	Only in <device> context
+		public String name;
+		public String value;
+		public double x;
+		public double y;
+		public double size;
+		public Layer layer;
+		public TextFont font;
+		public int ratio;
+		public Rotation rot = new Rotation("R0");
+		public AttributeDisplay display = AttributeDisplay.value;	//	Only in <element> or <instance> context
+		public boolean constant = false;	//	Only in <device> context
 	}
 	public static class Pinref {
 		//	attr
-		String part;
-		String gate;
-		String pin;
+		public String part;
+		public String gate;
+		public String pin;
 	}
 	public static class Contactref {
 		//	attr
-		String element;
-		String pad;
-		ContactRoute route = ContactRoute.all;
-		String routetag = "";
+		public String element;
+		public String pad;
+		public ContactRoute route = ContactRoute.all;
+		public String routetag = "";
 	}
 		
 	//----------------------------------------
@@ -612,69 +612,69 @@ public class Eagle_6_3_0 {
 
 	public static class Setting {
 		//	attr
-		boolean alwaysvectorfont;
-		VerticalText verticaltext = VerticalText.up;
+		public boolean alwaysvectorfont;
+		public VerticalText verticaltext = VerticalText.up;
 	}
 	public static class Designrules {
-		List<Description> descriptionList = new ArrayList<Description>();
-		List<Param> paramList = new ArrayList<Param>();
+		public List<Description> descriptionList = new ArrayList<Description>();
+		public List<Param> paramList = new ArrayList<Param>();
 		//	attr
-		String name;
+		public String name;
 	}
 	public static class Grid {
 		//	attr
-		double distance;
-		GridUnit unitdist;
-		GridUnit unit;
-		GridStyle style = GridStyle.lines;
-		int multiple = 1;
-		boolean display = false;
-		double altdistance;
-		GridUnit altunitdist;
-		GridUnit altunit;
+		public double distance;
+		public GridUnit unitdist;
+		public GridUnit unit;
+		public GridStyle style = GridStyle.lines;
+		public int multiple = 1;
+		public boolean display = false;
+		public double altdistance;
+		public GridUnit altunitdist;
+		public GridUnit altunit;
 	}
 	public static class Layer {
 		//	attr
-		int number;
-		String name;
-		int color;
-		int fill;
-		boolean visible = true;
-		boolean active = true;
+		public int number;
+		public String name;
+		public int color;
+		public int fill;
+		public boolean visible = true;
+		public boolean active = true;
 	}
 	public static class Class {
-		List<Clearance> clearanceList = new ArrayList<Clearance>();
+		public List<Clearance> clearanceList = new ArrayList<Clearance>();
 		//	attr
-		int number;
-		String name;
-		double width = 0;
-		double drill = 0;
+		public int number;
+		public String name;
+		public double width = 0;
+		public double drill = 0;
 	}
 	public static class Clearance {
 		//	attr
-		int classValue;
-		double value = 0;
+		public int classValue;
+		public double value = 0;
 	}
 	public static class Description {
 		String value;
 		//	attr
-		String language = "en";
+		public String language = "en";
 	}
 	public static class Param {
 		//	attr
-		String name;
-		String value;
+		public String name;
+		public String value;
 	}
 	public static class Pass {
-		List<Param> paramList = new ArrayList<Param>();
+		public List<Param> paramList = new ArrayList<Param>();
 		//	attr
-		String name;
-		String refer;
-		boolean active = true;
+		public String name;
+		public String refer;
+		public boolean active = true;
 	}
 	public static class Approved {
 		//	attr
-		String hash;
+		public String hash;
 	}
 
 	//----------------------------------------
@@ -682,7 +682,7 @@ public class Eagle_6_3_0 {
 	//----------------------------------------
 	
 	private static class SimpleStringObject {
-		String value;
+		public String value;
 		SimpleStringObject(String value) {
 			this.value = value;
 		}

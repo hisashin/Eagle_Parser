@@ -9,14 +9,15 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import st.tori.eagle.parser.dtd.DTDEntity.FileType;
+import st.tori.eagle.parser.dtd.Eagle_6_3_0.Eagle;
+import st.tori.eagle.parser.dtd.Eagle_6_3_0.FileType;
 import st.tori.eagle.parser.exception.EagleParserException;
 
 public abstract class AbstractEagleParserEngine {
 
-	protected abstract void parse(FileType fileType, InputStream bis);
+	protected abstract Eagle parse(FileType fileType, InputStream bis) throws EagleParserException;
 
-	public void parse(File file) throws EagleParserException {
+	public Eagle parse(File file) throws EagleParserException {
 		if(file==null)
 			throw new EagleParserException("file is null");
 		if(file.getTotalSpace()<=0)
@@ -37,7 +38,7 @@ public abstract class AbstractEagleParserEngine {
 		ByteArrayInputStream bis;
 		try {
 			bis = getDTDReplacedInputStream(file);
-			parse(fileType,bis);
+			return parse(fileType,bis);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new EagleParserException("cannot read file:"+file.getAbsolutePath());

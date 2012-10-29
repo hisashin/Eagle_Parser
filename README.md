@@ -1,4 +1,4 @@
 Eagle_Parser
 ============
 
-EAGLE brd&amp;sch file parser
+EAGLE lbr&amp;brd&amp;sch file parser
