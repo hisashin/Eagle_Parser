@@ -1,5 +1,7 @@
 package st.tori.eagle.parser.dtd;
 
+import st.tori.eagle.parser.exception.EagleParserException;
+
 public abstract class AbstractEagleDtd {
 
 	public enum FileType {
@@ -7,6 +9,7 @@ public abstract class AbstractEagleDtd {
 	}
 
 	public static interface ParentInterface {
+		void addChild(Object child);
 	}
 	public static interface HasAttrInterface {
 		void setAttr(String qName,String value);
@@ -16,6 +19,7 @@ public abstract class AbstractEagleDtd {
 		void setText(String text);
 	}
 	
-	public abstract Object newInstance(String qName);
+	public abstract Object newInstance(String qName) throws EagleParserException;
+	public abstract boolean isIgnoreQName(String qName);
 	
 }
