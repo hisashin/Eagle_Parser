@@ -29,7 +29,7 @@ public class Main extends DefaultHandler {
 			}
 		}
 		AbstractEagleDrawer drawer = EagleDrawerFactory.newInstance();
-		drawer.draw(eagle,"/Users/shingo/Desktop/eagle"+System.currentTimeMillis());
+		drawer.draw(eagle,"/Users/shingo/Desktop/eagle"+System.currentTimeMillis()+"/");
 		
 	}
 

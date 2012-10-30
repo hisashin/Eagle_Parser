@@ -1459,8 +1459,15 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("rot".equals(qName))
 				rot = new Rotation(value);
 		}
-		
-		//TODO toString from here
+
+		@Override
+		public String toString() {
+			return "Element[attributeList.size()=" + attributeList.size()
+					+ ",variantList.size()=" + variantList.size() + ",library="
+					+ library + ",packageValue=" + packageValue + ",value="
+					+ value + ",x=" + x + ",y=" + y + ",locked=" + locked
+					+ ",smashed=" + smashed + ",rot=" + rot + "]";
+		}
 	}
 
 	public static class Via implements HasAttrInterface {
@@ -1489,6 +1496,13 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				shape = getViaShape(value);
 			else if ("alwaysstop".equals(qName))
 				alwaysstop = "yes".equals(value);
+		}
+
+		@Override
+		public String toString() {
+			return "Via[x=" + x + ",y=" + y + ",extent=" + extent + ",drill="
+					+ drill + ",diameter=" + diameter + ",shape=" + shape
+					+ ",alwaysstop=" + alwaysstop + "]";
 		}
 	}
 
@@ -1540,6 +1554,14 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("rank".equals(qName))
 				rank = Integer.parseInt(value);
 		}
+
+		@Override
+		public String toString() {
+			return "Polygon[vertexList.size()=" + vertexList.size() + ",width="
+					+ width + ",layer=" + layer + ",spacing=" + spacing
+					+ ",pour=" + pour + ",isolate=" + isolate + ",orphans="
+					+ orphans + ",thermals=" + thermals + ",rank=" + rank + "]";
+		}
 	}
 
 	public static class Vertex implements HasAttrInterface {
@@ -1556,6 +1578,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				y = Double.parseDouble(value);
 			else if ("curve".equals(qName))
 				curve = Double.parseDouble(value);
+		}
+
+		@Override
+		public String toString() {
+			return "Vertex[x=" + x + ",y=" + y + ",curve=" + curve + "]";
 		}
 	}
 
@@ -1591,6 +1618,14 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				swaplevel = Integer.parseInt(value);
 			else if ("rot".equals(qName))
 				rot = new Rotation(value);
+		}
+
+		@Override
+		public String toString() {
+			return "Pin[name=" + name + ",x=" + x + ",y=" + y + ",visible="
+					+ visible + ",length=" + length + ",direction=" + direction
+					+ ",function=" + function + ",swaplevel=" + swaplevel
+					+ ",rot=" + rot + "]";
 		}
 	}
 
@@ -1629,6 +1664,14 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("value".equals(qName))
 				this.value = value;
 		}
+
+		@Override
+		public String toString() {
+			return "Part[attributeList.size()=" + attributeList.size()
+					+ ",variantList.size()=" + variantList.size() + ",name="
+					+ name + ",library=" + library + ",deviceset=" + deviceset
+					+ ",technology=" + technology + ",value=" + value + "]";
+		}
 	}
 
 	public static class Instance implements ParentInterface, HasAttrInterface {
@@ -1663,6 +1706,13 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("rot".equals(qName))
 				rot = new Rotation(value);
 		}
+
+		@Override
+		public String toString() {
+			return "Instance[attributeList.size()=" + attributeList.size()
+					+ ",part=" + part + ",gate=" + gate + ",x=" + x + ",y=" + y
+					+ ",smashed=" + smashed + ",rot=" + rot + "]";
+		}
 	}
 
 	public static class Label implements HasAttrInterface {
@@ -1695,6 +1745,13 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("xref".equals(qName))
 				xref = "yes".equals(value);
 		}
+
+		@Override
+		public String toString() {
+			return "Label[x=" + x + ",y=" + y + ",size=" + size + ",layer="
+					+ layer + ",font=" + font + ",ratio=" + ratio + ",rot="
+					+ rot + ",xref=" + xref + "]";
+		}
 	}
 
 	public static class Junction implements HasAttrInterface {
@@ -1708,6 +1765,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				x = Double.parseDouble(value);
 			else if ("y".equals(qName))
 				y = Double.parseDouble(value);
+		}
+
+		@Override
+		public String toString() {
+			return "Junction[x=" + x + ",y=" + y + "]";
 		}
 	}
 
@@ -1729,6 +1791,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("route".equals(qName))
 				route = getContactRoute(value);
 		}
+
+		@Override
+		public String toString() {
+			return "Connect[gate=" + gate + ",pin=" + pin + ",pad=" + pad
+					+ ",route=" + route + "]";
+		}
 	}
 
 	public static class Technology implements ParentInterface, HasAttrInterface {
@@ -1747,6 +1815,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		public void setAttr(String qName, String value) {
 			if ("name".equals(qName))
 				name = value;
+		}
+
+		@Override
+		public String toString() {
+			return "Technology[attributeList.size()=" + attributeList.size()
+					+ ",name=" + name + "]";
 		}
 	}
 
@@ -1791,6 +1865,14 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("constant".equals(qName))
 				constant = "yes".equals(value);
 		}
+
+		@Override
+		public String toString() {
+			return "Attribute[name=" + name + ",value=" + value + ",x=" + x
+					+ ",y=" + y + ",size=" + size + ",layer=" + layer
+					+ ",font=" + font + ",ratio=" + ratio + ",rot=" + rot
+					+ ",display=" + display + ",constant=" + constant + "]";
+		}
 	}
 
 	public static class Pinref implements HasAttrInterface {
@@ -1807,6 +1889,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				gate = value;
 			else if ("pin".equals(qName))
 				pin = value;
+		}
+
+		@Override
+		public String toString() {
+			return "Pinref[part=" + part + ",gate=" + gate + ",pin=" + pin
+					+ "]";
 		}
 	}
 
@@ -1828,6 +1916,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("routetag".equals(qName))
 				routetag = value;
 		}
+
+		@Override
+		public String toString() {
+			return "Contactref[element=" + element + ",pad=" + pad + ",route="
+					+ route + ",routetag=" + routetag + "]";
+		}
 	}
 
 	// ----------------------------------------
@@ -1845,6 +1939,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				alwaysvectorfont = "yes".equals(value);
 			else if ("verticaltext".equals(qName))
 				verticaltext = getVerticalText(value);
+		}
+
+		@Override
+		public String toString() {
+			return "Setting[alwaysvectorfont=" + alwaysvectorfont
+					+ ",verticaltext=" + verticaltext + "]";
 		}
 	}
 
@@ -1868,6 +1968,13 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		public void setAttr(String qName, String value) {
 			if ("name".equals(qName))
 				name = value;
+		}
+
+		@Override
+		public String toString() {
+			return "Designrules[descriptionList.size()="
+					+ descriptionList.size() + ",paramList.size()="
+					+ paramList.size() + ",name=" + name + "]";
 		}
 	}
 
@@ -1904,6 +2011,15 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("altunit".equals(qName))
 				altunit = getGridUnit(value);
 		}
+
+		@Override
+		public String toString() {
+			return "Grid[distance=" + distance + ",unitdist=" + unitdist
+					+ ",unit=" + unit + ",style=" + style + ",multiple="
+					+ multiple + ",display=" + display + ",altdistance="
+					+ altdistance + ",altunitdist=" + altunitdist + ",altunit="
+					+ altunit + "]";
+		}
 	}
 
 	public static class Layer implements HasAttrInterface {
@@ -1929,6 +2045,13 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				visible = !"no".equals(value);
 			else if ("active".equals(qName))
 				active = !"no".equals(value);
+		}
+
+		@Override
+		public String toString() {
+			return "Layer[number=" + number + ",name=" + name + ",color="
+					+ color + ",fill=" + fill + ",visible=" + visible
+					+ ",active=" + active + "]";
 		}
 	}
 
@@ -1958,6 +2081,13 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("drill".equals(qName))
 				drill = Double.parseDouble(value);
 		}
+
+		@Override
+		public String toString() {
+			return "Class[clearanceList.size()=" + clearanceList.size()
+					+ ",number=" + number + ",name=" + name + ",width=" + width
+					+ ",drill=" + drill + "]";
+		}
 	}
 
 	public static class Clearance implements HasAttrInterface {
@@ -1971,6 +2101,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				classValue = Integer.parseInt(value);
 			else if ("value".equals(qName))
 				this.value = Double.parseDouble(value);
+		}
+
+		@Override
+		public String toString() {
+			return "Clearance[classValue=" + classValue + ",value=" + value
+					+ "]";
 		}
 	}
 
@@ -1996,6 +2132,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			if ("language".equals(qName))
 				language = new Language(value);
 		}
+
+		@Override
+		public String toString() {
+			return "Description[text=" + text + ",language=" + language + "]";
+		}
 	}
 
 	public static class Param implements HasAttrInterface {
@@ -2009,6 +2150,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				name = value;
 			else if ("value".equals(qName))
 				this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return "Param[name=" + name + ",value=" + value + "]";
 		}
 	}
 
@@ -2035,6 +2181,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			else if ("active".equals(qName))
 				active = !"no".equals(value);
 		}
+
+		@Override
+		public String toString() {
+			return "Pass[paramList.size()=" + paramList.size() + ",name="
+					+ name + ",refer=" + refer + ",active=" + active + "]";
+		}
 	}
 
 	public static class Approved implements HasAttrInterface {
@@ -2045,6 +2197,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		public void setAttr(String qName, String value) {
 			if ("hash".equals(qName))
 				hash = value;
+		}
+
+		@Override
+		public String toString() {
+			return "Approved[hash=" + hash + "]";
 		}
 	}
 

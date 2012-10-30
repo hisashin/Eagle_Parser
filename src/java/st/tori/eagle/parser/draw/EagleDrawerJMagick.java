@@ -11,10 +11,10 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 	public void draw(Eagle eagle, String dirPath) {
 		ImageInfo ii;
 		try {
-			ii = new ImageInfo("label:hoge@hoge.hoge.com");
-			ii.setPointSize(30);
+			ii = new ImageInfo();
+			ii.setSize("100x50");
 			MagickImage mi = new MagickImage(ii);
-			mi.setFileName("sample.png");
+			mi.setFileName(dirPath+"sample.png");
 			mi.writeImage(new ImageInfo());
 		} catch (MagickException e) {
 			e.printStackTrace();
