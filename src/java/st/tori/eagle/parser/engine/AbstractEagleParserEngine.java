@@ -9,8 +9,8 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import st.tori.eagle.parser.dtd.Eagle_6_3_0.Eagle;
-import st.tori.eagle.parser.dtd.Eagle_6_3_0.FileType;
+import st.tori.eagle.parser.dtd.AbstractEagleDtd.FileType;
+import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Eagle;
 import st.tori.eagle.parser.exception.EagleParserException;
 
 public abstract class AbstractEagleParserEngine {
