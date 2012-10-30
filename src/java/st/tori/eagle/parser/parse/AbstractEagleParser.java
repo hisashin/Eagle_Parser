@@ -1,4 +1,4 @@
-package st.tori.eagle.parser.engine;
+package st.tori.eagle.parser.parse;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -13,7 +13,7 @@ import st.tori.eagle.parser.dtd.AbstractEagleDtd.FileType;
 import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Eagle;
 import st.tori.eagle.parser.exception.EagleParserException;
 
-public abstract class AbstractEagleParserEngine {
+public abstract class AbstractEagleParser {
 
 	protected abstract Eagle parse(FileType fileType, InputStream bis) throws EagleParserException;
 

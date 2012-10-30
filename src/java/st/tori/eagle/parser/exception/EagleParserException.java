@@ -1,17 +1,11 @@
 package st.tori.eagle.parser.exception;
 
-public class EagleParserException extends Exception {
+public class EagleParserException extends EagleException {
 
-	private String msg;
-	
+	private static final long serialVersionUID = -4357925364599382351L;
+
 	public EagleParserException(String msg) {
-		this.msg = msg;
+		super(msg);
 	}
-	
-	@Override
-	public String getMessage() {
-		return msg;
-	}
-	
 
 }
