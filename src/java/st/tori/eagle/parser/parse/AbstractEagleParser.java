@@ -17,6 +17,18 @@ public abstract class AbstractEagleParser {
 
 	protected abstract Eagle parse(FileType fileType, InputStream bis) throws EagleParserException;
 
+	public static class XYPosition {
+		public double x;
+		public double y;
+		public XYPosition(double x,double y) {
+			this.x = x;
+			this.y = y;
+		}
+		@Override
+		public String toString(){	return "{"+x+","+y+"}";	}
+	}
+	
+	
 	public Eagle parse(File file) throws EagleParserException {
 		if(file==null)
 			throw new EagleParserException("file is null");

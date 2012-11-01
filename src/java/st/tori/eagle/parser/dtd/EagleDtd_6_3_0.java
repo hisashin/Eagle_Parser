@@ -3,7 +3,15 @@ package st.tori.eagle.parser.dtd;
 import java.util.ArrayList;
 import java.util.List;
 
+import magick.DrawInfo;
+import magick.ImageInfo;
+import magick.MagickException;
+import magick.MagickImage;
+import magick.PixelPacket;
+
+import st.tori.eagle.parser.draw.AbstractEagleDrawer.DrawManager;
 import st.tori.eagle.parser.exception.EagleParserException;
+import st.tori.eagle.parser.parse.AbstractEagleParser.XYPosition;
 
 public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
@@ -484,6 +492,15 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			return "Eagle[compatibilityList.size()=" + compatibilityList.size()
 					+ ",drawing=" + drawing + ",version=" + version + "]";
 		}
+		
+		//	special
+		public XYPosition minXY;
+		public XYPosition maxXY;
+
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			if(drawing!=null)
+				drawing.draw(m,mi,ii);
+		}
 	}
 
 	public static class Compatibility implements ParentInterface {
@@ -551,6 +568,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				content = (DrawingInterface) child;
 		}
 
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			if(content!=null)
+				content.draw(m,mi,ii);
+		}
+
 		@Override
 		public String toString() {
 			return "Drawing[settings.size()=" + settings.size() + ",grid="
@@ -560,6 +582,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 	}
 
 	public static interface DrawingInterface {
+		void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException;
 	}
 
 	public static class Library implements DrawingInterface, ParentInterface,
@@ -596,6 +619,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 					+ packages.size() + ",symbols.size()=" + symbols.size()
 					+ ",devicesets.size()=" + devicesets.size() + ",name="
 					+ name + "]";
+		}
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) {
+			// TODO Auto-generated method stub
 		}
 	}
 
@@ -643,6 +671,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 
 		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
 		public String toString() {
 			return "Schematic[description=" + description
 					+ ",libraries.size()=" + libraries.size()
@@ -667,6 +701,14 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		List<Element> elements = new ArrayList<Element>();
 		List<Signal> signals = new ArrayList<Signal>();
 		List<Approved> errors = new ArrayList<Approved>();
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			for(int i=0;i<plainList.size();i++)
+				plainList.get(i).draw(m,mi,ii);
+			for(int i=0;i<signals.size();i++)
+				signals.get(i).draw(m,mi,ii);
+		}
 
 		@Override
 		public void addChild(Object child) {
@@ -706,6 +748,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 					+ ",signals.size()=" + signals.size() + ",errors.size()="
 					+ errors.size() + "]";
 		}
+
 	}
 
 	// ----------------------------------------
@@ -938,6 +981,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				viaList.add((Via) child);
 		}
 
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			for(int i=0;i<wireList.size();i++)
+				wireList.get(i).draw(m, mi, ii);
+		}
+
 		// attr
 		String name;
 		int classValue = 0;
@@ -1013,7 +1061,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Gate implements HasAttrInterface {
+	public static class Gate implements HasAttrInterface,HasXYPositionInterface {
 		// attr
 		String name;
 		String symbol;
@@ -1022,6 +1070,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		GateAddLevel addlevel = GateAddLevel.next;
 		int swaplevel = 0;
 
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
+		
 		@Override
 		public void setAttr(String qName, String value) {
 			if ("name".equals(qName))
@@ -1046,7 +1099,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Wire implements PlainInterface, HasAttrInterface {
+	public static class Wire implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
 		// attr
 		double x1;
 		double y1;
@@ -1058,6 +1111,20 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		WireStyle style = WireStyle.continuous;
 		double curve = 0;
 		WireCap cap = WireCap.round; // Only applicable if 'curve' is not zero
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			DrawInfo di = new DrawInfo(ii);
+			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+			di.setStrokeWidth(m.scale(width));
+			di.setPrimitive("line "+m.x(x1)+","+m.y(y1)+", "+m.x(x2)+","+m.y(y2));
+			mi.drawImage(di);
+		}
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x1,y1},{x2,y2}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1092,7 +1159,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Dimension implements HasAttrInterface {
+	public static class Dimension implements HasAttrInterface, HasXYPositionInterface {
 		// attr
 		double x1;
 		double y1;
@@ -1102,6 +1169,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		double y3;
 		int layer;
 		DimensionType dtype = DimensionType.parallel;
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x1,y1},{x2,y2},{x3,y3}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1132,7 +1204,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 	}
 
 	public static class Text implements PlainInterface, HasTextInterface,
-			HasAttrInterface {
+			HasAttrInterface, HasXYPositionInterface {
 		String text;
 
 		@Override
@@ -1155,6 +1227,16 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		Rotation rot = new Rotation("R0");
 		Align align = Align.bottom_left;
 		int distance = 50;
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1187,13 +1269,23 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Circle implements PlainInterface, HasAttrInterface {
+	public static class Circle implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
 		double radius;
 		double width;
 		int layer;
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1216,7 +1308,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Rectangle implements PlainInterface, HasAttrInterface {
+	public static class Rectangle implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
 		// attr
 		double x1;
 		double y1;
@@ -1224,6 +1316,16 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		double y2;
 		int layer;
 		Rotation rot = new Rotation("R0");
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x1,y1},{x2,y2}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1248,7 +1350,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Frame implements PlainInterface, HasAttrInterface {
+	public static class Frame implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
 		// attr
 		double x1;
 		double y1;
@@ -1261,6 +1363,16 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean border_top = true;
 		boolean border_right = true;
 		boolean border_bottom = true;
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x1,y1},{x2,y2}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1298,11 +1410,21 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Hole implements PlainInterface, HasAttrInterface {
+	public static class Hole implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
 		double drill;
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1320,7 +1442,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Pad implements PlainInterface, HasAttrInterface {
+	public static class Pad implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
 		// attr
 		String name;
 		double x;
@@ -1332,6 +1454,16 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean stop = true;
 		boolean thermals = true;
 		boolean first = false;
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1366,7 +1498,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Smd implements PlainInterface, HasAttrInterface {
+	public static class Smd implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
 		// attr
 		String name;
 		double x;
@@ -1379,6 +1511,16 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean stop = true;
 		boolean thermals = true;
 		boolean cream = true;
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1415,7 +1557,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Element implements ParentInterface, HasAttrInterface {
+	public static class Element implements ParentInterface, HasAttrInterface, HasXYPositionInterface {
 		List<Attribute> attributeList = new ArrayList<Attribute>();
 		List<Variant> variantList = new ArrayList<Variant>();
 
@@ -1437,6 +1579,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean locked = false;
 		boolean smashed = false;
 		Rotation rot = new Rotation("R0");
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1470,7 +1617,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Via implements HasAttrInterface {
+	public static class Via implements HasAttrInterface, HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
@@ -1479,6 +1626,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		double diameter = 0;
 		ViaShape shape = ViaShape.round;
 		boolean alwaysstop = false;
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1507,6 +1659,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 	}
 
 	public static interface PlainInterface {
+		void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException;
 	}
 
 	public static class Polygon implements PlainInterface, ParentInterface,
@@ -1534,6 +1687,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean orphans = false; // Only in <signal> context
 		boolean thermals = true; // Only in <signal> context
 		int rank = 0; // 1..6 in <signal> context,0 or 7 in <package> context
+
+		@Override
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) {
+			// TODO Auto-generated method stub
+			
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1564,11 +1723,16 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Vertex implements HasAttrInterface {
+	public static class Vertex implements HasAttrInterface, HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
 		double curve = 0; // The curvature from this vertext to the next one
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1586,7 +1750,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Pin implements HasAttrInterface {
+	public static class Pin implements HasAttrInterface, HasXYPositionInterface {
 		// attr
 		String name;
 		double x;
@@ -1597,6 +1761,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		PinFunction function = PinFunction.none;
 		int swaplevel = 0;
 		Rotation rot = new Rotation("R0");
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1674,7 +1843,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Instance implements ParentInterface, HasAttrInterface {
+	public static class Instance implements ParentInterface, HasAttrInterface, HasXYPositionInterface {
 		List<Attribute> attributeList = new ArrayList<Attribute>();
 
 		@Override
@@ -1690,6 +1859,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		double y;
 		boolean smashed = false;
 		Rotation rot = new Rotation("R0"); // Only 0,90,180 or 270
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1715,7 +1889,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Label implements HasAttrInterface {
+	public static class Label implements HasAttrInterface, HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
@@ -1725,6 +1899,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		int ratio = 8;
 		Rotation rot = new Rotation("R0"); // Onlhy 0,90,180 or 270
 		boolean xref = false; // only in <net> context
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1754,10 +1933,15 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Junction implements HasAttrInterface {
+	public static class Junction implements HasAttrInterface, HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -1824,7 +2008,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Attribute implements HasAttrInterface {
+	public static class Attribute implements HasAttrInterface, HasXYPositionInterface {
 		// attr
 		String name;
 		String value;
@@ -1839,6 +2023,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 															// or <instance>
 															// context
 		boolean constant = false; // Only in <device> context
+
+		@Override
+		public double[][] getXYPositions() {
+			return new double[][]{{x,y}};
+		}
 
 		@Override
 		public void setAttr(String qName, String value) {

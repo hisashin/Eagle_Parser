@@ -18,6 +18,9 @@ public abstract class AbstractEagleDtd {
 		String getText();
 		void setText(String text);
 	}
+	public static interface HasXYPositionInterface {
+		double[][] getXYPositions();
+	}
 	
 	public abstract Object newInstance(String qName) throws EagleParserException;
 	public abstract boolean isIgnoreQName(String qName);
