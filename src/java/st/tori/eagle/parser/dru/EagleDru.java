@@ -92,7 +92,7 @@ public class EagleDru {
 					key = m.group(1).trim();
 					prop = m.group(2).trim();
 					value = m.group(3).trim();
-					System.out.println ("key="+key+",prop="+prop+",value="+value);
+					//System.out.println ("key="+key+",prop="+prop+",value="+value);
 					Object obj = getInstance(key);
 					if(obj==null||!(obj instanceof HasPropObject))
 						throw new DruParserException("Cannot create instance for key="+key+",prop="+prop);
@@ -103,7 +103,7 @@ public class EagleDru {
 						key = m.group(1).trim();
 						prop = null;
 						value = m.group(2).trim();
-						System.out.println ("key="+key+",prop="+prop+",value="+value);
+						//System.out.println ("key="+key+",prop="+prop+",value="+value);
 						Object obj = getInstance(key);
 						if(obj==null||!(obj instanceof NoPropObject))
 							throw new DruParserException("Cannot create instance for key="+key+",prop="+prop);

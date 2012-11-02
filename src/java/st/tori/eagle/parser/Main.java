@@ -17,6 +17,8 @@ import st.tori.eagle.parser.parse.EagleParserFactory;
 public class Main extends DefaultHandler {
 
 	public static void main(String[] args) {
+		EagleDru.DRU_DEFAULT.description.get("en");
+		long startTimeInMillis = System.currentTimeMillis();
 		AbstractEagleParser parser = EagleParserFactory.newInstance();
 		Eagle eagle = null;
 		try {
@@ -26,12 +28,15 @@ public class Main extends DefaultHandler {
 		} catch (EagleParserException e) {
 			e.printStackTrace();
 		}
+		long parsedTimeInMillis = System.currentTimeMillis();
 		AbstractEagleDrawer drawer = EagleDrawerFactory.newInstance();
 		try {
 			drawer.draw(EagleDru.DRU_DEFAULT,eagle,"/Users/shingo/Desktop/eagle/");
 		} catch (MagickException e) {
 			e.printStackTrace();
 		}
+		long drawedTimeInMillis = System.currentTimeMillis();
+		System.out.println("PARSE:"+(parsedTimeInMillis-startTimeInMillis)+"ms DRAW:"+(drawedTimeInMillis-parsedTimeInMillis)+"ms TOTAL:"+(drawedTimeInMillis-startTimeInMillis)+"ms");
 	}
 
 }
