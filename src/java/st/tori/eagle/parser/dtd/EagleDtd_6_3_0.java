@@ -716,7 +716,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				}
 			}
 			for(int i=0;i<plainList.size();i++)
-				plainList.get(i).draw(m,mi,ii);
+				plainList.get(i).draw(m,mi,ii,0,0,0);
 			for(int i=0;i<signals.size();i++)
 				signals.get(i).draw(m,mi,ii);
 			for(int i=0;i<elements.size();i++)
@@ -812,7 +812,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
 			for(int i=0;i<elements.size();i++)
-				elements.get(i).draw(m, mi, ii);
+				elements.get(i).draw(m,mi,ii,0,0,0);
 		}
 
 		// attr
@@ -1001,9 +1001,9 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
 			for(int i=0;i<polygonList.size();i++)
-				polygonList.get(i).draw(m, mi, ii);
+				polygonList.get(i).draw(m,mi,ii,0,0,0);
 			for(int i=0;i<wireList.size();i++)
-				wireList.get(i).draw(m, mi, ii);
+				wireList.get(i).draw(m,mi,ii,0,0,0);
 		}
 
 		// attr
@@ -1133,17 +1133,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		WireCap cap = WireCap.round; // Only applicable if 'curve' is not zero
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			draw(m,mi,ii,0,0,0);
-		}
-		void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
 			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
 			di.setStrokeWidth(m.scale(width));
 			double[] _xy1 = DrawManager.convert(new double[]{x1,y1}, offsetX, offsetY, rad);
 			double[] _xy2 = DrawManager.convert(new double[]{x2,y2}, offsetX, offsetY, rad);
-			//double[] _xy1 = new double[]{x1,y1};
-			//double[] _xy2 = new double[]{x2,y2};
 			di.setPrimitive("line "+m.x(_xy1[0])+","+m.y(_xy1[1])+", "+m.x(_xy2[0])+","+m.y(_xy2[1]));
 			mi.drawImage(di);
 		}
@@ -1257,7 +1252,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		int distance = 50;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			// TODO Auto-generated method stub
 		}
 
@@ -1306,8 +1301,14 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		int layer;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			// TODO Auto-generated method stub
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+			DrawInfo di = new DrawInfo(ii);
+			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+			di.setStrokeWidth(m.scale(width));
+			double[] _xy = DrawManager.convert(new double[]{x,y}, offsetX, offsetY, rad);
+			double[] _xr = DrawManager.convert(new double[]{x,y-radius}, offsetX, offsetY, rad);
+			di.setPrimitive("fill #000000 fill-opacity 0 circle "+m.x(_xy[0])+","+m.y(_xy[1])+", "+m.x(_xr[0])+","+m.y(_xr[1]));
+			mi.drawImage(di);
 		}
 
 		@Override
@@ -1346,8 +1347,16 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		Rotation rot = new Rotation("R0");
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			// TODO Auto-generated method stub
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+			DrawInfo di = new DrawInfo(ii);
+			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+			di.setStrokeWidth(m.scale(0.1));
+			double[] _xy1 = DrawManager.convert(new double[]{x1,y1}, offsetX, offsetY, rad);
+			double[] _xy2 = DrawManager.convert(new double[]{x2,y1}, offsetX, offsetY, rad);
+			double[] _xy3 = DrawManager.convert(new double[]{x2,y2}, offsetX, offsetY, rad);
+			double[] _xy4 = DrawManager.convert(new double[]{x1,y2}, offsetX, offsetY, rad);
+			di.setPrimitive("fill #000000 fill-opacity 0 polygon "+m.x(_xy1[0])+","+m.y(_xy1[1])+", "+m.x(_xy2[0])+","+m.y(_xy2[1])+", "+m.x(_xy3[0])+","+m.y(_xy3[1])+", "+m.x(_xy4[0])+","+m.y(_xy4[1]));
+			mi.drawImage(di);
 		}
 
 		@Override
@@ -1393,7 +1402,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean border_bottom = true;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			// TODO Auto-generated method stub
 		}
 
@@ -1445,8 +1454,14 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		double drill;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			// TODO Auto-generated method stub
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+			DrawInfo di = new DrawInfo(ii);
+			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+			di.setStrokeWidth(m.scale(0.1));
+			double[] _xy = DrawManager.convert(new double[]{x,y}, offsetX, offsetY, rad);
+			double[] _xr = DrawManager.convert(new double[]{x,y-drill/2}, offsetX, offsetY, rad);
+			di.setPrimitive("fill #000000 fill-opacity 0 circle "+m.x(_xy[0])+","+m.y(_xy[1])+", "+m.x(_xr[0])+","+m.y(_xr[1]));
+			mi.drawImage(di);
 		}
 
 		@Override
@@ -1484,8 +1499,18 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean first = false;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			// TODO Auto-generated method stub
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+			DrawInfo di = new DrawInfo(ii);
+			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+			if(diameter==0)diameter = drill*2;
+			double width = (diameter-drill)/2;
+			di.setStrokeWidth(m.scale(width));
+			double[] _xy = DrawManager.convert(new double[]{0,0}, x, y, rot.getRad());
+			_xy = DrawManager.convert(_xy, offsetX, offsetY, rad);
+			double[] _xr = DrawManager.convert(new double[]{0,0-diameter/2+width/2}, x, y, rot.getRad());
+			_xr = DrawManager.convert(_xr, offsetX, offsetY, rad);
+			di.setPrimitive("fill #000000 fill-opacity 0 circle "+m.x(_xy[0])+","+m.y(_xy[1])+", "+m.x(_xr[0])+","+m.y(_xr[1]));
+			mi.drawImage(di);
 		}
 
 		@Override
@@ -1541,8 +1566,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean cream = true;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			// TODO Auto-generated method stub
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+			//	TODO
 		}
 
 		@Override
@@ -1612,11 +1637,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			Package pack = m.getPackage(library,packageValue);
 			if(pack==null)return;
 			double rad = rot.getRad();
-			for(int i=0;i<pack.elements.size();i++) {
-				PlainInterface plain = pack.elements.get(i);
-				if(!(plain instanceof Wire))continue;
-				((Wire)plain).draw(m, mi, ii, x, y, rad);
-			}
+			for(int i=0;i<pack.elements.size();i++)
+				pack.elements.get(i).draw(m, mi, ii, x, y, rad);
 		}
 
 		@Override
@@ -1698,7 +1720,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 	}
 
 	public static interface PlainInterface {
-		void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException;
+		void draw(DrawManager m, MagickImage mi, ImageInfo ii, double x, double y, double rad) throws MagickException;
 	}
 
 	public static class Polygon implements PlainInterface, ParentInterface,
@@ -1728,7 +1750,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		int rank = 0; // 1..6 in <signal> context,0 or 7 in <package> context
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			if(vertexList.size()<1)return;
 			Vertex v0 = vertexList.get(0);
 			Vertex v1 = vertexList.get(0);
