@@ -7,8 +7,9 @@ import magick.PixelPacket;
 
 public class Color {
 	
-	public static Color BLACK = new Color(0,null,255,255,255);
-	public static Color WHITE = new Color(0,null,0,0,0);
+	public static Color BLACK	 = new Color(0,null,255,255,255);
+	public static Color GRAY	 = new Color(0,null,128,128,128);
+	public static Color WHITE	 = new Color(0,null,0,0,0);
 	
 	public static Color get(int layer) {
 		return layerMap.get(layer);
@@ -23,7 +24,9 @@ public class Color {
 	int green;
 	int blue;
 	int opacy = 0;
+	
 	public PixelPacket pixelPacket;
+	public String rgb;
 	
 	public Color(int layer,LayerName name,int red,int green,int blue) {
 		this.layer = layer;
@@ -32,6 +35,11 @@ public class Color {
 		this.green = green;
 		this.blue = blue;
 		this.pixelPacket = new PixelPacket(0xbb*red, 0xdd*green, 0xff*blue, 0);
+		this.rgb = "#"+to2Hex(red)+to2Hex(green)+to2Hex(blue);
+	}
+	private static String to2Hex(int val) {
+		String tmp = Integer.toHexString(val);
+		return (tmp.length()<=1)?"0"+tmp:tmp;
 	}
 
 	public enum LayerName {

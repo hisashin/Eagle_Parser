@@ -492,14 +492,15 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			return "Eagle[compatibilityList.size()=" + compatibilityList.size()
 					+ ",drawing=" + drawing + ",version=" + version + "]";
 		}
-		
-		//	special
+
+		// special
 		public XYPosition minXY;
 		public XYPosition maxXY;
 
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			if(drawing!=null)
-				drawing.draw(m,mi,ii);
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii)
+				throws MagickException {
+			if (drawing != null)
+				drawing.draw(m, mi, ii);
 		}
 	}
 
@@ -568,9 +569,10 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				content = (DrawingInterface) child;
 		}
 
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			if(content!=null)
-				content.draw(m,mi,ii);
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii)
+				throws MagickException {
+			if (content != null)
+				content.draw(m, mi, ii);
 		}
 
 		@Override
@@ -582,7 +584,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 	}
 
 	public static interface DrawingInterface {
-		void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException;
+		void draw(DrawManager m, MagickImage mi, ImageInfo ii)
+				throws MagickException;
 	}
 
 	public static class Library implements DrawingInterface, ParentInterface,
@@ -591,7 +594,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		public List<Package> packages = new ArrayList<Package>();
 		List<Symbol> symbols = new ArrayList<Symbol>();
 		List<Deviceset> devicesets = new ArrayList<Deviceset>();
-		
+
 		@Override
 		public void addChild(Object child) {
 			if (child instanceof Description)
@@ -622,11 +625,12 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			for(int i=0;i<packages.size();i++)
-				packages.get(i).draw(m,mi,ii);
-			for(int i=0;i<symbols.size();i++)
-				symbols.get(i).draw(m,mi,ii);
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii)
+				throws MagickException {
+			for (int i = 0; i < packages.size(); i++)
+				packages.get(i).draw(m, mi, ii);
+			for (int i = 0; i < symbols.size(); i++)
+				symbols.get(i).draw(m, mi, ii);
 		}
 	}
 
@@ -676,7 +680,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		@Override
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
@@ -706,22 +710,23 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		List<Approved> errors = new ArrayList<Approved>();
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii)
+				throws MagickException {
 			Library lib;
 			Package pack;
-			for(int i=0;i<libraries.size();i++) {
+			for (int i = 0; i < libraries.size(); i++) {
 				lib = libraries.get(i);
-				for(int j=0;j<lib.packages.size();j++) {
+				for (int j = 0; j < lib.packages.size(); j++) {
 					pack = lib.packages.get(j);
-					m.addPackage(lib.name,pack.name,pack);
+					m.addPackage(lib.name, pack.name, pack);
 				}
 			}
-			for(int i=0;i<plainList.size();i++)
-				plainList.get(i).draw(m,mi,ii,0,0,0);
-			for(int i=0;i<signals.size();i++)
-				signals.get(i).draw(m,mi,ii);
-			for(int i=0;i<elements.size();i++)
-				elements.get(i).draw(m,mi,ii);
+			for (int i = 0; i < plainList.size(); i++)
+				plainList.get(i).draw(m, mi, ii, 0, 0, 0);
+			for (int i = 0; i < signals.size(); i++)
+				signals.get(i).draw(m, mi, ii);
+			for (int i = 0; i < elements.size(); i++)
+				elements.get(i).draw(m, mi, ii);
 		}
 
 		@Override
@@ -811,9 +816,10 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				elements.add((PlainInterface) child);
 		}
 
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			for(int i=0;i<elements.size();i++)
-				elements.get(i).draw(m,mi,ii,0,0,0);
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii)
+				throws MagickException {
+			for (int i = 0; i < elements.size(); i++)
+				elements.get(i).draw(m, mi, ii, 0, 0, 0);
 		}
 
 		// attr
@@ -1000,13 +1006,14 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				viaList.add((Via) child);
 		}
 
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			for(int i=0;i<polygonList.size();i++)
-				polygonList.get(i).draw(m,mi,ii,0,0,0);
-			for(int i=0;i<wireList.size();i++)
-				wireList.get(i).draw(m,mi,ii,0,0,0);
-			for(int i=0;i<viaList.size();i++)
-				viaList.get(i).draw(m,mi,ii,0,0,0);
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii)
+				throws MagickException {
+			for (int i = 0; i < polygonList.size(); i++)
+				polygonList.get(i).draw(m, mi, ii, 0, 0, 0);
+			for (int i = 0; i < wireList.size(); i++)
+				wireList.get(i).draw(m, mi, ii, 0, 0, 0);
+			for (int i = 0; i < viaList.size(); i++)
+				viaList.get(i).draw(m, mi, ii, 0, 0, 0);
 		}
 
 		// attr
@@ -1084,7 +1091,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Gate implements HasAttrInterface,HasXYPositionInterface {
+	public static class Gate implements HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		String name;
 		String symbol;
@@ -1095,9 +1103,9 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
-		
+
 		@Override
 		public void setAttr(String qName, String value) {
 			if ("name".equals(qName))
@@ -1122,7 +1130,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Wire implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
+	public static class Wire implements PlainInterface, HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		double x1;
 		double y1;
@@ -1136,19 +1145,24 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		WireCap cap = WireCap.round; // Only applicable if 'curve' is not zero
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
+				double offsetX, double offsetY, double rad)
+				throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
 			di.setStroke(Color.get(layer).pixelPacket);
 			di.setStrokeWidth(m.scale(width));
-			double[] _xy1 = DrawManager.convert(new double[]{x1,y1}, offsetX, offsetY, rad);
-			double[] _xy2 = DrawManager.convert(new double[]{x2,y2}, offsetX, offsetY, rad);
-			di.setPrimitive("stroke-linecap round line "+m.x(_xy1[0])+","+m.y(_xy1[1])+", "+m.x(_xy2[0])+","+m.y(_xy2[1]));
+			double[] _xy1 = DrawManager.convert(new double[] { x1, y1 },
+					offsetX, offsetY, rad);
+			double[] _xy2 = DrawManager.convert(new double[] { x2, y2 },
+					offsetX, offsetY, rad);
+			di.setPrimitive("stroke-linecap round line " + m.x(_xy1[0]) + ","
+					+ m.y(_xy1[1]) + ", " + m.x(_xy2[0]) + "," + m.y(_xy2[1]));
 			mi.drawImage(di);
 		}
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x1,y1},{x2,y2}};
+			return new double[][] { { x1, y1 }, { x2, y2 } };
 		}
 
 		@Override
@@ -1185,7 +1199,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 	}
 
-	public static class Dimension implements HasAttrInterface, HasXYPositionInterface {
+	public static class Dimension implements HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		double x1;
 		double y1;
@@ -1198,7 +1213,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x1,y1},{x2,y2},{x3,y3}};
+			return new double[][] { { x1, y1 }, { x2, y2 }, { x3, y3 } };
 		}
 
 		@Override
@@ -1255,13 +1270,15 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		int distance = 50;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
+				double offsetX, double offsetY, double rad)
+				throws MagickException {
 			// TODO Auto-generated method stub
 		}
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -1295,7 +1312,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Circle implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
+	public static class Circle implements PlainInterface, HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
@@ -1304,19 +1322,25 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		int layer;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
+				double offsetX, double offsetY, double rad)
+				throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
 			di.setStroke(Color.get(layer).pixelPacket);
 			di.setStrokeWidth(m.scale(width));
-			double[] _xy = DrawManager.convert(new double[]{x,y}, offsetX, offsetY, rad);
-			double[] _xr = DrawManager.convert(new double[]{x,y-radius}, offsetX, offsetY, rad);
-			di.setPrimitive("fill #000000 fill-opacity 0 circle "+m.x(_xy[0])+","+m.y(_xy[1])+", "+m.x(_xr[0])+","+m.y(_xr[1]));
+			double[] _xy = DrawManager.convert(new double[] { x, y }, offsetX,
+					offsetY, rad);
+			double[] _xr = DrawManager.convert(new double[] { x, y - radius },
+					offsetX, offsetY, rad);
+			di.setPrimitive("fill #000000 fill-opacity 0 circle " + m.x(_xy[0])
+					+ "," + m.y(_xy[1]) + ", " + m.x(_xr[0]) + ","
+					+ m.y(_xr[1]));
 			mi.drawImage(di);
 		}
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -1340,7 +1364,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Rectangle implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
+	public static class Rectangle implements PlainInterface, HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		double x1;
 		double y1;
@@ -1350,21 +1375,37 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		Rotation rot = new Rotation("R0");
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
+				double offsetX, double offsetY, double rad)
+				throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
 			di.setStroke(Color.get(layer).pixelPacket);
-			di.setStrokeWidth(m.scale(0.1));
-			double[] _xy1 = DrawManager.convert(new double[]{x1,y1}, offsetX, offsetY, rad);
-			double[] _xy2 = DrawManager.convert(new double[]{x2,y1}, offsetX, offsetY, rad);
-			double[] _xy3 = DrawManager.convert(new double[]{x2,y2}, offsetX, offsetY, rad);
-			double[] _xy4 = DrawManager.convert(new double[]{x1,y2}, offsetX, offsetY, rad);
-			di.setPrimitive("fill #000000 fill-opacity 0 polygon "+m.x(_xy1[0])+","+m.y(_xy1[1])+", "+m.x(_xy2[0])+","+m.y(_xy2[1])+", "+m.x(_xy3[0])+","+m.y(_xy3[1])+", "+m.x(_xy4[0])+","+m.y(_xy4[1]));
+			double dx = x2 - x1;
+			double dy = y2 - y1;
+			double x = (x1 + x2) / 2;
+			double y = (y1 + y2) / 2;
+			double[] _xy1 = DrawManager.convert(
+					new double[] { -dx / 2, -dy / 2 }, x, y, rot.getRad());
+			_xy1 = DrawManager.convert(_xy1, offsetX, offsetY, rad);
+			double[] _xy2 = DrawManager.convert(
+					new double[] { +dx / 2, -dy / 2 }, x, y, rot.getRad());
+			_xy2 = DrawManager.convert(_xy2, offsetX, offsetY, rad);
+			double[] _xy3 = DrawManager.convert(
+					new double[] { +dx / 2, +dy / 2 }, x, y, rot.getRad());
+			_xy3 = DrawManager.convert(_xy3, offsetX, offsetY, rad);
+			double[] _xy4 = DrawManager.convert(
+					new double[] { -dx / 2, +dy / 2 }, x, y, rot.getRad());
+			_xy4 = DrawManager.convert(_xy4, offsetX, offsetY, rad);
+			di.setPrimitive("fill " + Color.get(layer).rgb + " polygon "
+					+ m.x(_xy1[0]) + "," + m.y(_xy1[1]) + ", " + m.x(_xy2[0])
+					+ "," + m.y(_xy2[1]) + ", " + m.x(_xy3[0]) + ","
+					+ m.y(_xy3[1]) + ", " + m.x(_xy4[0]) + "," + m.y(_xy4[1]));
 			mi.drawImage(di);
 		}
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x1,y1},{x2,y2}};
+			return new double[][] { { x1, y1 }, { x2, y2 } };
 		}
 
 		@Override
@@ -1390,7 +1431,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Frame implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
+	public static class Frame implements PlainInterface, HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		double x1;
 		double y1;
@@ -1405,13 +1447,15 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean border_bottom = true;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
+				double offsetX, double offsetY, double rad)
+				throws MagickException {
 			// TODO Auto-generated method stub
 		}
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x1,y1},{x2,y2}};
+			return new double[][] { { x1, y1 }, { x2, y2 } };
 		}
 
 		@Override
@@ -1450,26 +1494,45 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Hole implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
+	public static class Hole implements PlainInterface, HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
 		double drill;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
+				double offsetX, double offsetY, double rad)
+				throws MagickException {
+			drawCircle(m, mi, ii, offsetX, offsetY, rad,
+					Color.get(LayerName.Holes), x, y, drill / 2);
+			drawCircle(m, mi, ii, offsetX, offsetY, rad, Color.GRAY, x, y,
+					drill / 3);
+			drawCircle(m, mi, ii, offsetX, offsetY, rad, Color.GRAY, x, y,
+					drill / 6);
+		}
+
+		private static void drawCircle(DrawManager m, MagickImage mi,
+				ImageInfo ii, double offsetX, double offsetY, double rad,
+				Color color, double x, double y, double radius)
+				throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
-			di.setStroke(Color.get(LayerName.Holes).pixelPacket);
+			di.setStroke(color.pixelPacket);
 			di.setStrokeWidth(m.scale(0.1));
-			double[] _xy = DrawManager.convert(new double[]{x,y}, offsetX, offsetY, rad);
-			double[] _xr = DrawManager.convert(new double[]{x,y-drill/2}, offsetX, offsetY, rad);
-			di.setPrimitive("fill #000000 fill-opacity 0 circle "+m.x(_xy[0])+","+m.y(_xy[1])+", "+m.x(_xr[0])+","+m.y(_xr[1]));
+			double[] _xy = DrawManager.convert(new double[] { x, y }, offsetX,
+					offsetY, rad);
+			double[] _xr = DrawManager.convert(new double[] { x, y - radius },
+					offsetX, offsetY, rad);
+			di.setPrimitive("fill #000000 fill-opacity 0 circle " + m.x(_xy[0])
+					+ "," + m.y(_xy[1]) + ", " + m.x(_xr[0]) + ","
+					+ m.y(_xr[1]));
 			mi.drawImage(di);
 		}
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -1488,7 +1551,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Pad implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
+	public static class Pad implements PlainInterface, HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		String name;
 		double x;
@@ -1502,23 +1566,30 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean first = false;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
+				double offsetX, double offsetY, double rad)
+				throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
 			di.setStroke(Color.get(LayerName.Pads).pixelPacket);
-			if(diameter==0)diameter = drill*(1+m.dru.rvPadTop.getDouble()*2);
-			double width = (diameter-drill)/2;
+			if (diameter == 0)
+				diameter = drill * (1 + m.dru.rvPadTop.getDouble() * 2);
+			double width = (diameter - drill) / 2;
 			di.setStrokeWidth(m.scale(width));
-			double[] _xy = DrawManager.convert(new double[]{0,0}, x, y, rot.getRad());
+			double[] _xy = DrawManager.convert(new double[] { 0, 0 }, x, y,
+					rot.getRad());
 			_xy = DrawManager.convert(_xy, offsetX, offsetY, rad);
-			double[] _xr = DrawManager.convert(new double[]{0,0-diameter/2+width/2}, x, y, rot.getRad());
+			double[] _xr = DrawManager.convert(new double[] { 0,
+					0 - diameter / 2 + width / 2 }, x, y, rot.getRad());
 			_xr = DrawManager.convert(_xr, offsetX, offsetY, rad);
-			di.setPrimitive("fill #000000 fill-opacity 0 circle "+m.x(_xy[0])+","+m.y(_xy[1])+", "+m.x(_xr[0])+","+m.y(_xr[1]));
+			di.setPrimitive("fill #000000 fill-opacity 0 circle " + m.x(_xy[0])
+					+ "," + m.y(_xy[1]) + ", " + m.x(_xr[0]) + ","
+					+ m.y(_xr[1]));
 			mi.drawImage(di);
 		}
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -1554,7 +1625,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Smd implements PlainInterface, HasAttrInterface, HasXYPositionInterface {
+	public static class Smd implements PlainInterface, HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		String name;
 		double x;
@@ -1569,13 +1641,33 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean cream = true;
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
-			//	TODO
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
+				double offsetX, double offsetY, double rad)
+				throws MagickException {
+			DrawInfo di = new DrawInfo(ii);
+			di.setStroke(Color.get(layer).pixelPacket);
+			double[] _xy1 = DrawManager.convert(
+					new double[] { -dx / 2, -dy / 2 }, x, y, rot.getRad());
+			_xy1 = DrawManager.convert(_xy1, offsetX, offsetY, rad);
+			double[] _xy2 = DrawManager.convert(
+					new double[] { +dx / 2, -dy / 2 }, x, y, rot.getRad());
+			_xy2 = DrawManager.convert(_xy2, offsetX, offsetY, rad);
+			double[] _xy3 = DrawManager.convert(
+					new double[] { +dx / 2, +dy / 2 }, x, y, rot.getRad());
+			_xy3 = DrawManager.convert(_xy3, offsetX, offsetY, rad);
+			double[] _xy4 = DrawManager.convert(
+					new double[] { -dx / 2, +dy / 2 }, x, y, rot.getRad());
+			_xy4 = DrawManager.convert(_xy4, offsetX, offsetY, rad);
+			di.setPrimitive("fill " + Color.get(layer).rgb + " polygon "
+					+ m.x(_xy1[0]) + "," + m.y(_xy1[1]) + ", " + m.x(_xy2[0])
+					+ "," + m.y(_xy2[1]) + ", " + m.x(_xy3[0]) + ","
+					+ m.y(_xy3[1]) + ", " + m.x(_xy4[0]) + "," + m.y(_xy4[1]));
+			mi.drawImage(di);
 		}
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -1613,7 +1705,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Element implements ParentInterface, HasAttrInterface, HasXYPositionInterface {
+	public static class Element implements ParentInterface, HasAttrInterface,
+			HasXYPositionInterface {
 		List<Attribute> attributeList = new ArrayList<Attribute>();
 		List<Variant> variantList = new ArrayList<Variant>();
 
@@ -1635,18 +1728,20 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		boolean locked = false;
 		boolean smashed = false;
 		public Rotation rot = new Rotation("R0");
-		
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
-			Package pack = m.getPackage(library,packageValue);
-			if(pack==null)return;
+
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii)
+				throws MagickException {
+			Package pack = m.getPackage(library, packageValue);
+			if (pack == null)
+				return;
 			double rad = rot.getRad();
-			for(int i=0;i<pack.elements.size();i++)
+			for (int i = 0; i < pack.elements.size(); i++)
 				pack.elements.get(i).draw(m, mi, ii, x, y, rad);
 		}
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -1691,23 +1786,29 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		ViaShape shape = ViaShape.round;
 		boolean alwaysstop = false;
 
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
+				double offsetX, double offsetY, double rad)
+				throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
 			di.setStroke(Color.get(LayerName.Vias).pixelPacket);
-			if(diameter==0)diameter = drill*(1+m.dru.rvViaOuter.getDouble()*2);
-			double width = (diameter-drill)/2;
+			if (diameter == 0)
+				diameter = drill * (1 + m.dru.rvViaOuter.getDouble() * 2);
+			double width = (diameter - drill) / 2;
 			di.setStrokeWidth(m.scale(width));
-			double[] _xy = DrawManager.convert(new double[]{0,0}, x, y, 0);
+			double[] _xy = DrawManager.convert(new double[] { 0, 0 }, x, y, 0);
 			_xy = DrawManager.convert(_xy, offsetX, offsetY, rad);
-			double[] _xr = DrawManager.convert(new double[]{0,0-diameter/2+width/2}, x, y, 0);
+			double[] _xr = DrawManager.convert(new double[] { 0,
+					0 - diameter / 2 + width / 2 }, x, y, 0);
 			_xr = DrawManager.convert(_xr, offsetX, offsetY, rad);
-			di.setPrimitive("fill #000000 fill-opacity 0 circle "+m.x(_xy[0])+","+m.y(_xy[1])+", "+m.x(_xr[0])+","+m.y(_xr[1]));
+			di.setPrimitive("fill #000000 fill-opacity 0 circle " + m.x(_xy[0])
+					+ "," + m.y(_xy[1]) + ", " + m.x(_xr[0]) + ","
+					+ m.y(_xr[1]));
 			mi.drawImage(di);
 		}
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -1737,7 +1838,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 	}
 
 	public static interface PlainInterface {
-		void draw(DrawManager m, MagickImage mi, ImageInfo ii, double x, double y, double rad) throws MagickException;
+		void draw(DrawManager m, MagickImage mi, ImageInfo ii, double x,
+				double y, double rad) throws MagickException;
 	}
 
 	public static class Polygon implements PlainInterface, ParentInterface,
@@ -1767,25 +1869,30 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		int rank = 0; // 1..6 in <signal> context,0 or 7 in <package> context
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
-			if(vertexList.size()<1)return;
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
+				double offsetX, double offsetY, double rad)
+				throws MagickException {
+			if (vertexList.size() < 1)
+				return;
 			Vertex v0 = vertexList.get(0);
 			Vertex v1 = vertexList.get(0);
 			Vertex v2 = null;
-			for(int i=1;i<vertexList.size();i++) {
+			for (int i = 1; i < vertexList.size(); i++) {
 				v2 = vertexList.get(i);
 				DrawInfo di = new DrawInfo(ii);
 				di.setStroke(Color.get(layer).pixelPacket);
 				di.setStrokeWidth(m.scale(width));
-				di.setPrimitive("line "+m.x(v1.x)+","+m.y(v1.y)+", "+m.x(v2.x)+","+m.y(v2.y));
+				di.setPrimitive("line " + m.x(v1.x) + "," + m.y(v1.y) + ", "
+						+ m.x(v2.x) + "," + m.y(v2.y));
 				mi.drawImage(di);
 				v1 = v2;
 			}
-			if(v2!=null&&(v2.x!=v0.x)||(v2.y!=v0.y)) {
+			if (v2 != null && (v2.x != v0.x) || (v2.y != v0.y)) {
 				DrawInfo di = new DrawInfo(ii);
 				di.setStroke(Color.get(layer).pixelPacket);
 				di.setStrokeWidth(m.scale(width));
-				di.setPrimitive("line "+m.x(v2.x)+","+m.y(v2.y)+", "+m.x(v0.x)+","+m.y(v0.y));
+				di.setPrimitive("line " + m.x(v2.x) + "," + m.y(v2.y) + ", "
+						+ m.x(v0.x) + "," + m.y(v0.y));
 				mi.drawImage(di);
 			}
 		}
@@ -1819,7 +1926,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Vertex implements HasAttrInterface, HasXYPositionInterface {
+	public static class Vertex implements HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
@@ -1827,7 +1935,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -1860,7 +1968,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -1939,7 +2047,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Instance implements ParentInterface, HasAttrInterface, HasXYPositionInterface {
+	public static class Instance implements ParentInterface, HasAttrInterface,
+			HasXYPositionInterface {
 		List<Attribute> attributeList = new ArrayList<Attribute>();
 
 		@Override
@@ -1958,7 +2067,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -1985,7 +2094,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Label implements HasAttrInterface, HasXYPositionInterface {
+	public static class Label implements HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
@@ -1998,7 +2108,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -2029,14 +2139,15 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Junction implements HasAttrInterface, HasXYPositionInterface {
+	public static class Junction implements HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		double x;
 		double y;
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -2104,7 +2215,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 	}
 
-	public static class Attribute implements HasAttrInterface, HasXYPositionInterface {
+	public static class Attribute implements HasAttrInterface,
+			HasXYPositionInterface {
 		// attr
 		String name;
 		String value;
@@ -2122,7 +2234,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		@Override
 		public double[][] getXYPositions() {
-			return new double[][]{{x,y}};
+			return new double[][] { { x, y } };
 		}
 
 		@Override
@@ -2506,11 +2618,16 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		Rotation(String value) {
 			super(value);
 		}
-		static double deg2rad = Math.PI/180;
+
+		static double deg2rad = Math.PI / 180;
+
 		public double getRad() {
-			if(value==null||value.length()<=1)return 0;
-			if(value.startsWith("L"))return Double.parseDouble(value.substring(1))*deg2rad;
-			if(value.startsWith("R"))return (360-Double.parseDouble(value.substring(1)))*deg2rad;
+			if (value == null || value.length() <= 1)
+				return 0;
+			if (value.startsWith("L"))
+				return Double.parseDouble(value.substring(1)) * deg2rad;
+			if (value.startsWith("R"))
+				return (360 - Double.parseDouble(value.substring(1))) * deg2rad;
 			return 0;
 		}
 	}
