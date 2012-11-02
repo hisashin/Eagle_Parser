@@ -13,7 +13,8 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 	public void draw(Eagle eagle, DrawManager m, String dirPath) throws MagickException {
 		System.out.println("DRAW START:dirPath="+dirPath);
 		new File(dirPath).mkdirs();
-		ImageInfo ii = new ImageInfo("xc:none");
+		//ImageInfo ii = new ImageInfo("xc:none");
+		ImageInfo ii = new ImageInfo("xc:white");
 		System.out.println("size:"+m.getImageWidth()+","+m.getImageHeight());
 		ii.setSize(m.getImageWidth()+"x"+m.getImageHeight());
 		

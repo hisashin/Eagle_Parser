@@ -7,7 +7,8 @@ import magick.DrawInfo;
 import magick.ImageInfo;
 import magick.MagickException;
 import magick.MagickImage;
-import magick.PixelPacket;
+import st.tori.eagle.parser.draw.Color;
+import st.tori.eagle.parser.draw.Color.LayerName;
 import st.tori.eagle.parser.draw.DrawManager;
 import st.tori.eagle.parser.exception.EagleParserException;
 import st.tori.eagle.parser.parse.AbstractEagleParser.XYPosition;
@@ -1004,6 +1005,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				polygonList.get(i).draw(m,mi,ii,0,0,0);
 			for(int i=0;i<wireList.size();i++)
 				wireList.get(i).draw(m,mi,ii,0,0,0);
+			for(int i=0;i<viaList.size();i++)
+				viaList.get(i).draw(m,mi,ii,0,0,0);
 		}
 
 		// attr
@@ -1135,11 +1138,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		@Override
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
-			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+			di.setStroke(Color.get(layer).pixelPacket);
 			di.setStrokeWidth(m.scale(width));
 			double[] _xy1 = DrawManager.convert(new double[]{x1,y1}, offsetX, offsetY, rad);
 			double[] _xy2 = DrawManager.convert(new double[]{x2,y2}, offsetX, offsetY, rad);
-			di.setPrimitive("line "+m.x(_xy1[0])+","+m.y(_xy1[1])+", "+m.x(_xy2[0])+","+m.y(_xy2[1]));
+			di.setPrimitive("stroke-linecap round line "+m.x(_xy1[0])+","+m.y(_xy1[1])+", "+m.x(_xy2[0])+","+m.y(_xy2[1]));
 			mi.drawImage(di);
 		}
 
@@ -1303,7 +1306,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		@Override
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
-			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+			di.setStroke(Color.get(layer).pixelPacket);
 			di.setStrokeWidth(m.scale(width));
 			double[] _xy = DrawManager.convert(new double[]{x,y}, offsetX, offsetY, rad);
 			double[] _xr = DrawManager.convert(new double[]{x,y-radius}, offsetX, offsetY, rad);
@@ -1349,7 +1352,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		@Override
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
-			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+			di.setStroke(Color.get(layer).pixelPacket);
 			di.setStrokeWidth(m.scale(0.1));
 			double[] _xy1 = DrawManager.convert(new double[]{x1,y1}, offsetX, offsetY, rad);
 			double[] _xy2 = DrawManager.convert(new double[]{x2,y1}, offsetX, offsetY, rad);
@@ -1456,7 +1459,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		@Override
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
-			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+			di.setStroke(Color.get(LayerName.Holes).pixelPacket);
 			di.setStrokeWidth(m.scale(0.1));
 			double[] _xy = DrawManager.convert(new double[]{x,y}, offsetX, offsetY, rad);
 			double[] _xr = DrawManager.convert(new double[]{x,y-drill/2}, offsetX, offsetY, rad);
@@ -1501,7 +1504,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		@Override
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
-			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+			di.setStroke(Color.get(LayerName.Pads).pixelPacket);
 			if(diameter==0)diameter = drill*(1+m.dru.rvPadTop.getDouble()*2);
 			double width = (diameter-drill)/2;
 			di.setStrokeWidth(m.scale(width));
@@ -1688,6 +1691,20 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		ViaShape shape = ViaShape.round;
 		boolean alwaysstop = false;
 
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
+			DrawInfo di = new DrawInfo(ii);
+			di.setStroke(Color.get(LayerName.Vias).pixelPacket);
+			if(diameter==0)diameter = drill*(1+m.dru.rvViaOuter.getDouble()*2);
+			double width = (diameter-drill)/2;
+			di.setStrokeWidth(m.scale(width));
+			double[] _xy = DrawManager.convert(new double[]{0,0}, x, y, 0);
+			_xy = DrawManager.convert(_xy, offsetX, offsetY, rad);
+			double[] _xr = DrawManager.convert(new double[]{0,0-diameter/2+width/2}, x, y, 0);
+			_xr = DrawManager.convert(_xr, offsetX, offsetY, rad);
+			di.setPrimitive("fill #000000 fill-opacity 0 circle "+m.x(_xy[0])+","+m.y(_xy[1])+", "+m.x(_xr[0])+","+m.y(_xr[1]));
+			mi.drawImage(di);
+		}
+
 		@Override
 		public double[][] getXYPositions() {
 			return new double[][]{{x,y}};
@@ -1758,7 +1775,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			for(int i=1;i<vertexList.size();i++) {
 				v2 = vertexList.get(i);
 				DrawInfo di = new DrawInfo(ii);
-				di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+				di.setStroke(Color.get(layer).pixelPacket);
 				di.setStrokeWidth(m.scale(width));
 				di.setPrimitive("line "+m.x(v1.x)+","+m.y(v1.y)+", "+m.x(v2.x)+","+m.y(v2.y));
 				mi.drawImage(di);
@@ -1766,7 +1783,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			}
 			if(v2!=null&&(v2.x!=v0.x)||(v2.y!=v0.y)) {
 				DrawInfo di = new DrawInfo(ii);
-				di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+				di.setStroke(Color.get(layer).pixelPacket);
 				di.setStrokeWidth(m.scale(width));
 				di.setPrimitive("line "+m.x(v2.x)+","+m.y(v2.y)+", "+m.x(v0.x)+","+m.y(v0.y));
 				mi.drawImage(di);

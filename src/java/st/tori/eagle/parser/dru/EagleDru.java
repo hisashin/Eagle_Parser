@@ -14,12 +14,6 @@ import st.tori.eagle.parser.exception.DruParserException;
 
 public class EagleDru {
 
-	public static void main(String[] args) throws IOException, DruParserException {
-		EagleDru dru = new EagleDru();
-		dru.parse("/Users/shingo/Eagle_Parser/doc/dru/Fusion_eagle_rule_v1.1.dru");
-		//dru.parse("/Users/shingo/Eagle_Parser/doc/dru/Olimex_8mils.dru");
-	}
-	
 	static double MIL_TO_MM = 0.0254;
 	static Pattern PATTERN_ARRAY = Pattern.compile("([^=]+)\\[(.+)\\] *= *(.*)");
 	static Pattern PATTERN_UNIQ = Pattern.compile("([^=]+) *= *(.*)");
