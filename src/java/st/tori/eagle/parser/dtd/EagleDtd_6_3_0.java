@@ -8,8 +8,7 @@ import magick.ImageInfo;
 import magick.MagickException;
 import magick.MagickImage;
 import magick.PixelPacket;
-
-import st.tori.eagle.parser.draw.AbstractEagleDrawer.DrawManager;
+import st.tori.eagle.parser.draw.DrawManager;
 import st.tori.eagle.parser.exception.EagleParserException;
 import st.tori.eagle.parser.parse.AbstractEagleParser.XYPosition;
 
@@ -588,10 +587,10 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 	public static class Library implements DrawingInterface, ParentInterface,
 			HasAttrInterface {
 		Description description;
-		List<Package> packages = new ArrayList<Package>();
+		public List<Package> packages = new ArrayList<Package>();
 		List<Symbol> symbols = new ArrayList<Symbol>();
 		List<Deviceset> devicesets = new ArrayList<Deviceset>();
-
+		
 		@Override
 		public void addChild(Object child) {
 			if (child instanceof Description)
@@ -605,7 +604,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 
 		// attr
-		String name;
+		public String name;
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -622,8 +621,11 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) {
-			// TODO Auto-generated method stub
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			for(int i=0;i<packages.size();i++)
+				packages.get(i).draw(m,mi,ii);
+			for(int i=0;i<symbols.size();i++)
+				symbols.get(i).draw(m,mi,ii);
 		}
 	}
 
@@ -704,10 +706,21 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		@Override
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			Library lib;
+			Package pack;
+			for(int i=0;i<libraries.size();i++) {
+				lib = libraries.get(i);
+				for(int j=0;j<lib.packages.size();j++) {
+					pack = lib.packages.get(j);
+					m.addPackage(lib.name,pack.name,pack);
+				}
+			}
 			for(int i=0;i<plainList.size();i++)
 				plainList.get(i).draw(m,mi,ii);
 			for(int i=0;i<signals.size();i++)
 				signals.get(i).draw(m,mi,ii);
+			for(int i=0;i<elements.size();i++)
+				elements.get(i).draw(m,mi,ii);
 		}
 
 		@Override
@@ -787,7 +800,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 	public static class Package implements ParentInterface, HasAttrInterface {
 		Description description;
-		List<PlainInterface> elements = new ArrayList<PlainInterface>();
+		public List<PlainInterface> elements = new ArrayList<PlainInterface>();
 
 		@Override
 		public void addChild(Object child) {
@@ -797,8 +810,13 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				elements.add((PlainInterface) child);
 		}
 
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			for(int i=0;i<elements.size();i++)
+				elements.get(i).draw(m, mi, ii);
+		}
+
 		// attr
-		String name;
+		public String name;
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -982,6 +1000,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			for(int i=0;i<polygonList.size();i++)
+				polygonList.get(i).draw(m, mi, ii);
 			for(int i=0;i<wireList.size();i++)
 				wireList.get(i).draw(m, mi, ii);
 		}
@@ -1114,10 +1134,17 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		@Override
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			draw(m,mi,ii,0,0,0);
+		}
+		void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
 			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
 			di.setStrokeWidth(m.scale(width));
-			di.setPrimitive("line "+m.x(x1)+","+m.y(y1)+", "+m.x(x2)+","+m.y(y2));
+			double[] _xy1 = DrawManager.convert(new double[]{x1,y1}, offsetX, offsetY, rad);
+			double[] _xy2 = DrawManager.convert(new double[]{x2,y2}, offsetX, offsetY, rad);
+			//double[] _xy1 = new double[]{x1,y1};
+			//double[] _xy2 = new double[]{x2,y2};
+			di.setPrimitive("line "+m.x(_xy1[0])+","+m.y(_xy1[1])+", "+m.x(_xy2[0])+","+m.y(_xy2[1]));
 			mi.drawImage(di);
 		}
 
@@ -1157,6 +1184,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 					+ extent + ",style=" + style + ",curve=" + curve + ",cap="
 					+ cap + "]";
 		}
+
 	}
 
 	public static class Dimension implements HasAttrInterface, HasXYPositionInterface {
@@ -1571,14 +1599,25 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		// attr
 		String name;
-		String library;
-		String packageValue;
+		public String library;
+		public String packageValue;
 		String value;
-		double x;
-		double y;
+		public double x;
+		public double y;
 		boolean locked = false;
 		boolean smashed = false;
-		Rotation rot = new Rotation("R0");
+		public Rotation rot = new Rotation("R0");
+		
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			Package pack = m.getPackage(library,packageValue);
+			if(pack==null)return;
+			double rad = rot.getRad();
+			for(int i=0;i<pack.elements.size();i++) {
+				PlainInterface plain = pack.elements.get(i);
+				if(!(plain instanceof Wire))continue;
+				((Wire)plain).draw(m, mi, ii, x, y, rad);
+			}
+		}
 
 		@Override
 		public double[][] getXYPositions() {
@@ -1590,7 +1629,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			if ("name".equals(qName))
 				name = value;
 			else if ("library".equals(qName))
-				name = value;
+				library = value;
 			else if ("package".equals(qName))
 				packageValue = value;
 			else if ("value".equals(qName))
@@ -1689,9 +1728,27 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		int rank = 0; // 1..6 in <signal> context,0 or 7 in <package> context
 
 		@Override
-		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) {
-			// TODO Auto-generated method stub
-			
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+			if(vertexList.size()<1)return;
+			Vertex v0 = vertexList.get(0);
+			Vertex v1 = vertexList.get(0);
+			Vertex v2 = null;
+			for(int i=1;i<vertexList.size();i++) {
+				v2 = vertexList.get(i);
+				DrawInfo di = new DrawInfo(ii);
+				di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+				di.setStrokeWidth(m.scale(width));
+				di.setPrimitive("line "+m.x(v1.x)+","+m.y(v1.y)+", "+m.x(v2.x)+","+m.y(v2.y));
+				mi.drawImage(di);
+				v1 = v2;
+			}
+			if(v2!=null&&(v2.x!=v0.x)||(v2.y!=v0.y)) {
+				DrawInfo di = new DrawInfo(ii);
+				di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
+				di.setStrokeWidth(m.scale(width));
+				di.setPrimitive("line "+m.x(v2.x)+","+m.y(v2.y)+", "+m.x(v0.x)+","+m.y(v0.y));
+				mi.drawImage(di);
+			}
 		}
 
 		@Override
@@ -2409,6 +2466,13 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 	public static class Rotation extends SimpleStringObject {
 		Rotation(String value) {
 			super(value);
+		}
+		static double deg2rad = Math.PI/180;
+		public double getRad() {
+			if(value==null||value.length()<=1)return 0;
+			if(value.startsWith("L"))return Double.parseDouble(value.substring(1))*deg2rad;
+			if(value.startsWith("R"))return (360-Double.parseDouble(value.substring(1)))*deg2rad;
+			return 0;
 		}
 	}
 
