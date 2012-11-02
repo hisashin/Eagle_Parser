@@ -1,10 +1,18 @@
 package st.tori.eagle.parser.dru;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import st.tori.eagle.parser.exception.DruParserException;
 
-public class EagleDru extends AbstractEagleDru {
+public class EagleDru {
 
 	public static void main(String[] args) throws IOException, DruParserException {
 		EagleDru dru = new EagleDru();
@@ -12,6 +20,118 @@ public class EagleDru extends AbstractEagleDru {
 		//dru.parse("/Users/shingo/Eagle_Parser/doc/dru/Olimex_8mils.dru");
 	}
 	
+	static double MIL_TO_MM = 0.0254;
+	static Pattern PATTERN_ARRAY = Pattern.compile("([^=]+)\\[(.+)\\] *= *(.*)");
+	static Pattern PATTERN_UNIQ = Pattern.compile("([^=]+) *= *(.*)");
+	
+	public static EagleDru DRU_DEFAULT	 = new EagleDru();
+	public static EagleDru DRU_FUSION	 = new EagleDru();
+	public static EagleDru DRU_OLIMEX	 = new EagleDru();
+	static {
+		try {
+			DRU_DEFAULT.parse("/Users/shingo/Eagle_Parser/doc/dru/default.dru");
+			DRU_FUSION.parse("/Users/shingo/Eagle_Parser/doc/dru/Fusion_eagle_rule_v1.1.dru");
+			DRU_OLIMEX.parse("/Users/shingo/Eagle_Parser/doc/dru/Olimex_8mils.dru");
+		} catch (DruParserException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static abstract class HasPropObject {
+		protected Map<String, String> map = new HashMap<String, String>();
+		public void put(String prop,String val) {
+			map.put(prop, val);
+		}
+		public String get(String prop) {
+			return map.get(prop);
+		}
+	}
+	public static abstract class NoPropObject {
+		protected String value;
+		void put(String value) {
+			this.value = value;
+		}
+		String value() {
+			return value;
+		}
+	    public int getInt() {	return Integer.parseInt(value);	}
+	    public double getDouble() {	return Double.parseDouble(value);	}
+		public double[] getArrayInMM() {
+			String[] _array = value.split(" ");
+			double[] array = new double[_array.length];
+			for(int i=0;i<_array.length;i++)
+				array[i] = Double.parseDouble(_array[i].replaceFirst("mm", ""));
+			return array;
+		}
+	    public double getMil() {
+	    	if(value.endsWith("mil"))
+	    		return Double.parseDouble(value.replaceFirst("mil", ""));
+	    	else if(value.endsWith("mm"))
+	    		return Double.parseDouble(value.replaceFirst("mm", ""))/MIL_TO_MM;
+	    	return 0;
+	    }
+	    public double getMM() {
+	    	if(value.endsWith("mil"))
+	    		return Double.parseDouble(value.replaceFirst("mil", ""))*MIL_TO_MM;
+	    	else if(value.endsWith("mm"))
+	    		return Double.parseDouble(value.replaceFirst("mm", ""));
+	    	return 0;
+	    }
+	}
+	
+	public final void parse(String druFilePath) throws DruParserException {
+		File file = new File(druFilePath);
+		BufferedReader buffReader = null;
+		try {
+			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			String line;
+			Matcher m;
+			String key = null;
+			String prop = null;
+			String value = null;
+			while((line = buffReader.readLine()) != null){
+				line = line.trim();
+				if(line.length()<=0)continue;
+				//System.out.println(line);
+				m = PATTERN_ARRAY.matcher(line);
+				if(m.find()) {
+					key = m.group(1).trim();
+					prop = m.group(2).trim();
+					value = m.group(3).trim();
+					System.out.println ("key="+key+",prop="+prop+",value="+value);
+					Object obj = getInstance(key);
+					if(obj==null||!(obj instanceof HasPropObject))
+						throw new DruParserException("Cannot create instance for key="+key+",prop="+prop);
+					((HasPropObject)obj).put(prop, value);
+				}else{
+					m = PATTERN_UNIQ.matcher(line);
+					if(m.find()) {
+						key = m.group(1).trim();
+						prop = null;
+						value = m.group(2).trim();
+						System.out.println ("key="+key+",prop="+prop+",value="+value);
+						Object obj = getInstance(key);
+						if(obj==null||!(obj instanceof NoPropObject))
+							throw new DruParserException("Cannot create instance for key="+key+",prop="+prop);
+						((NoPropObject)obj).put(value);
+					}else{
+						throw new DruParserException("Parse fail:"+line);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new DruParserException("Cannot read "+druFilePath);
+		} finally {
+			try {
+				buffReader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new DruParserException("Cannot close "+druFilePath);
+			}
+		}
+	}
+
 	public Description description = new Description();
 	public LayerSetup layerSetup = new LayerSetup();
 	public MtCopper mtCopper = new MtCopper();
@@ -85,8 +205,7 @@ public class EagleDru extends AbstractEagleDru {
 	public UseDiameter useDiameter = new UseDiameter();
 	public MaxErrors maxErrors = new MaxErrors();
 	
-	@Override
-	public Object getInstance(String qName) throws DruParserException {
+	Object getInstance(String qName) throws DruParserException {
 		if ("description".equals(qName))return description;
 		else if("layerSetup".equals(qName))return layerSetup;
 		else if("mtCopper".equals(qName))return mtCopper;
@@ -169,227 +288,365 @@ public class EagleDru extends AbstractEagleDru {
 	[Olimex]
 	key=description,prop=bg,value=<b>EAGLE Design Rules</b>\n<p>\nThe default Design Rules have been set to cover\na wide range of applications. Your particular design\nmay have different requirements, so please make the\nnecessary adjustments and save your customized\ndesign rules under a new name.
 	 */
-	public static class Description extends HasPropObject {
-		@Override
-		public String value(String prop) {
-			String tmp = super.value(prop);
-			if(tmp!=null)return tmp;
-			tmp = map.get("en");
-			return tmp;
-		}
-	}
+	public static class Description extends HasPropObject {}
 	//key=layerSetup,prop=null,value=(1*16)
 	//key=layerSetup,prop=null,value=(1*16)
 	public static class LayerSetup extends NoPropObject {}
 	//key=mtCopper,prop=null,value=0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm
 	//key=mtCopper,prop=null,value=0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm
-	public static class MtCopper extends NoPropObject {}
+	public static class MtCopper extends NoPropObject {
+		//Use getArrayInMM();
+	}
 	//key=mtIsolate,prop=null,value=1.5mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm
 	//key=mtIsolate,prop=null,value=1.5mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm
-    public static class MtIsolate extends NoPropObject {}
+    public static class MtIsolate extends NoPropObject {
+		//Use getArrayInMM();
+    }
     //key=mdWireWire,prop=null,value=6mil
 	//key=mdWireWire,prop=null,value=8mil
-    public static class MdWireWire extends NoPropObject {}
+    public static class MdWireWire extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdWirePad,prop=null,value=6mil
 	//key=mdWirePad,prop=null,value=8mil
-    public static class MdWirePad extends NoPropObject {}
+    public static class MdWirePad extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdWireVia,prop=null,value=6mil
 	//key=mdWireVia,prop=null,value=8mil
-    public static class MdWireVia extends NoPropObject {}
+    public static class MdWireVia extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdPadPad,prop=null,value=6mil
 	//key=mdPadPad,prop=null,value=8mil
-    public static class MdPadPad extends NoPropObject {}
+    public static class MdPadPad extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdPadVia,prop=null,value=6mil
 	//key=mdPadVia,prop=null,value=8mil
-    public static class MdPadVia extends NoPropObject {}
+    public static class MdPadVia extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdViaVia,prop=null,value=6mil
 	//key=mdViaVia,prop=null,value=8mil
-    public static class MdViaVia extends NoPropObject {}
+    public static class MdViaVia extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdSmdPad,prop=null,value=0mil
 	//key=mdSmdPad,prop=null,value=0mil
-    public static class MdSmdPad extends NoPropObject {}
+    public static class MdSmdPad extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdSmdVia,prop=null,value=0mil
 	//key=mdSmdVia,prop=null,value=0mil
-    public static class MdSmdVia extends NoPropObject {}
+    public static class MdSmdVia extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdSmdSmd,prop=null,value=0mil
 	//key=mdSmdSmd,prop=null,value=0mil
-    public static class MdSmdSmd extends NoPropObject {}
+    public static class MdSmdSmd extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdViaViaSameLayer,prop=null,value=8mil
 	//key=mdViaViaSameLayer,prop=null,value=8mil
-    public static class MdViaViaSameLayer extends NoPropObject {}
+    public static class MdViaViaSameLayer extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mnLayersViaInSmd,prop=null,value=2
 	//key=mnLayersViaInSmd,prop=null,value=2
-    public static class MnLayersViaInSmd extends NoPropObject {}
+    public static class MnLayersViaInSmd extends NoPropObject {
+		//Use getInt();
+    }
 	//key=mdCopperDimension,prop=null,value=10mil
 	//key=mdCopperDimension,prop=null,value=20mil
-    public static class MdCopperDimension extends NoPropObject {}
+    public static class MdCopperDimension extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdDrill,prop=null,value=10mil
 	//key=mdDrill,prop=null,value=10mil
-    public static class MdDrill extends NoPropObject {}
+    public static class MdDrill extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=mdSmdStop,prop=null,value=0mil
 	//key=mdSmdStop,prop=null,value=0mil
-    public static class MdSmdStop extends NoPropObject {}
+    public static class MdSmdStop extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=msWidth,prop=null,value=6mil
 	//key=msWidth,prop=null,value=8mil
-    public static class MsWidth extends NoPropObject {}
+    public static class MsWidth extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=msDrill,prop=null,value=12mil
 	//key=msDrill,prop=null,value=0.7mm
-    public static class MsDrill extends NoPropObject {}
+    public static class MsDrill extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=msMicroVia,prop=null,value=12mil
 	//key=msMicroVia,prop=null,value=0.7mm
-    public static class MsMicroVia extends NoPropObject {}
+    public static class MsMicroVia extends NoPropObject {
+		//Use getMil() or getMM();
+    }
 	//key=msBlindViaRatio,prop=null,value=0.500000
 	//key=msBlindViaRatio,prop=null,value=0.000000
-    public static class MsBlindViaRatio extends NoPropObject {}
+    public static class MsBlindViaRatio extends NoPropObject {
+		//Use getDouble();
+    }
 	//key=rvPadTop,prop=null,value=0.250000
 	//key=rvPadTop,prop=null,value=0.250000
-    public static class RvPadTop extends NoPropObject {}
+    //top pad size as percent of drill size 
+    public static class RvPadTop extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=rvPadInner,prop=null,value=0.250000
 	//key=rvPadInner,prop=null,value=0.250000
-    public static class RvPadInner extends NoPropObject {}
+    public static class RvPadInner extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=rvPadBottom,prop=null,value=0.250000
 	//key=rvPadBottom,prop=null,value=0.250000
-    public static class RvPadBottom extends NoPropObject {}
+    public static class RvPadBottom extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=rvViaOuter,prop=null,value=0.250000
 	//key=rvViaOuter,prop=null,value=0.250000
-    public static class RvViaOuter extends NoPropObject {}
+    //copper annulus is this percent of via hole 
+    public static class RvViaOuter extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=rvViaInner,prop=null,value=0.250000
 	//key=rvViaInner,prop=null,value=0.250000
-    public static class RvViaInner extends NoPropObject {}
+    public static class RvViaInner extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=rvMicroViaOuter,prop=null,value=0.250000
 	//key=rvMicroViaOuter,prop=null,value=0.250000
-    public static class RvMicroViaOuter extends NoPropObject {}
+    public static class RvMicroViaOuter extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=rvMicroViaInner,prop=null,value=0.250000
 	//key=rvMicroViaInner,prop=null,value=0.250000
-    public static class RvMicroViaInner extends NoPropObject {}
+    public static class RvMicroViaInner extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=rlMinPadTop,prop=null,value=10mil
 	//key=rlMinPadTop,prop=null,value=8mil
-    public static class RlMinPadTop extends NoPropObject {}
+    //minimum copper annulus on through hole pads 
+    public static class RlMinPadTop extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMaxPadTop,prop=null,value=20mil
 	//key=rlMaxPadTop,prop=null,value=20mil
-    public static class RlMaxPadTop extends NoPropObject {}
+    //maximum copper annulus on through hole pads 
+    public static class RlMaxPadTop extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMinPadInner,prop=null,value=10mil
 	//key=rlMinPadInner,prop=null,value=8mil
-    public static class RlMinPadInner extends NoPropObject {}
+    public static class RlMinPadInner extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMaxPadInner,prop=null,value=20mil
 	//key=rlMaxPadInner,prop=null,value=20mil
-    public static class RlMaxPadInner extends NoPropObject {}
+    public static class RlMaxPadInner extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMinPadBottom,prop=null,value=10mil
 	//key=rlMinPadBottom,prop=null,value=8mil
-    public static class RlMinPadBottom extends NoPropObject {}
+    public static class RlMinPadBottom extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMaxPadBottom,prop=null,value=20mil
 	//key=rlMaxPadBottom,prop=null,value=20mil
-    public static class RlMaxPadBottom extends NoPropObject {}
+    public static class RlMaxPadBottom extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMinViaOuter,prop=null,value=6mil
 	//key=rlMinViaOuter,prop=null,value=8mil
-    public static class RlMinViaOuter extends NoPropObject {}
+    //minimum copper annulus on via 
+    public static class RlMinViaOuter extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMaxViaOuter,prop=null,value=20mil
 	//key=rlMaxViaOuter,prop=null,value=20mil
-    public static class RlMaxViaOuter extends NoPropObject {}
+    //maximum copper annulus on via 
+    public static class RlMaxViaOuter extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMinViaInner,prop=null,value=6mil
 	//key=rlMinViaInner,prop=null,value=8mil
-    public static class RlMinViaInner extends NoPropObject {}
+    public static class RlMinViaInner extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMaxViaInner,prop=null,value=20mil
 	//key=rlMaxViaInner,prop=null,value=20mil
-    public static class RlMaxViaInner extends NoPropObject {}
+    public static class RlMaxViaInner extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMinMicroViaOuter,prop=null,value=4mil
 	//key=rlMinMicroViaOuter,prop=null,value=8mil
-    public static class RlMinMicroViaOuter extends NoPropObject {}
+    public static class RlMinMicroViaOuter extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMaxMicroViaOuter,prop=null,value=20mil
 	//key=rlMaxMicroViaOuter,prop=null,value=20mil
-    public static class RlMaxMicroViaOuter extends NoPropObject {}
+    public static class RlMaxMicroViaOuter extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMinMicroViaInner,prop=null,value=4mil
 	//key=rlMinMicroViaInner,prop=null,value=8mil
-    public static class RlMinMicroViaInner extends NoPropObject {}
+    public static class RlMinMicroViaInner extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=rlMaxMicroViaInner,prop=null,value=20mil
 	//key=rlMaxMicroViaInner,prop=null,value=20mil
-    public static class RlMaxMicroViaInner extends NoPropObject {}
+    public static class RlMaxMicroViaInner extends NoPropObject  {
+    	//Use getMil() or getMM();
+    }
 	//key=psTop,prop=null,value=-1
 	//key=psTop,prop=null,value=1
-    public static class PsTop extends NoPropObject {}
+    public static class PsTop extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=psBottom,prop=null,value=-1
 	//key=psBottom,prop=null,value=1
-    public static class PsBottom extends NoPropObject {}
+    public static class PsBottom extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=psFirst,prop=null,value=0
 	//key=psFirst,prop=null,value=-1
-    public static class PsFirst extends NoPropObject {}
+    public static class PsFirst extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=psElongationLong,prop=null,value=100
 	//key=psElongationLong,prop=null,value=100
-    public static class PsElongationLong extends NoPropObject {}
+    public static class PsElongationLong extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=psElongationOffset,prop=null,value=100
 	//key=psElongationOffset,prop=null,value=100
-    public static class PsElongationOffset extends NoPropObject {}
+    public static class PsElongationOffset extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=mvStopFrame,prop=null,value=1.000000
 	//key=mvStopFrame,prop=null,value=0.100000
-    public static class MvStopFrame extends NoPropObject {}
+    public static class MvStopFrame extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=mvCreamFrame,prop=null,value=0.000000
 	//key=mvCreamFrame,prop=null,value=0.000000
-    public static class MvCreamFrame extends NoPropObject {}
+    public static class MvCreamFrame extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=mlMinStopFrame,prop=null,value=2mil
 	//key=mlMinStopFrame,prop=null,value=0mil
-    public static class MlMinStopFrame extends NoPropObject {}
+    public static class MlMinStopFrame extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=mlMaxStopFrame,prop=null,value=2mil
 	//key=mlMaxStopFrame,prop=null,value=20mil
-    public static class MlMaxStopFrame extends NoPropObject {}
+    public static class MlMaxStopFrame extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=mlMinCreamFrame,prop=null,value=0mil
 	//key=mlMinCreamFrame,prop=null,value=0mil
-    public static class MlMinCreamFrame extends NoPropObject {}
+    public static class MlMinCreamFrame extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=mlMaxCreamFrame,prop=null,value=0mil
 	//key=mlMaxCreamFrame,prop=null,value=0mil
-    public static class MlMaxCreamFrame extends NoPropObject {}
+    public static class MlMaxCreamFrame extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=mlViaStopLimit,prop=null,value=100mil
 	//key=mlViaStopLimit,prop=null,value=0mil
-    public static class MlViaStopLimit extends NoPropObject {}
+    public static class MlViaStopLimit extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=srRoundness,prop=null,value=0.000000
 	//key=srRoundness,prop=null,value=0.000000
-    public static class SrRoundness extends NoPropObject {}
+    public static class SrRoundness extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=srMinRoundness,prop=null,value=0mil
 	//key=srMinRoundness,prop=null,value=0mil
-    public static class SrMinRoundness extends NoPropObject {}
+    public static class SrMinRoundness extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=srMaxRoundness,prop=null,value=0mil
 	//key=srMaxRoundness,prop=null,value=0mil
-    public static class SrMaxRoundness extends NoPropObject {}
+    public static class SrMaxRoundness extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=slThermalGap,prop=null,value=0.500000
 	//key=slThermalGap,prop=null,value=0.500000
-    public static class SlThermalGap extends NoPropObject {}
+    public static class SlThermalGap extends NoPropObject {
+    	//Use getDouble();
+    }
 	//key=slMinThermalGap,prop=null,value=20mil
 	//key=slMinThermalGap,prop=null,value=20mil
-    public static class SlMinThermalGap extends NoPropObject {}
+    public static class SlMinThermalGap extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=slMaxThermalGap,prop=null,value=100mil
 	//key=slMaxThermalGap,prop=null,value=100mil
-    public static class SlMaxThermalGap extends NoPropObject {}
+    public static class SlMaxThermalGap extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=slAnnulusIsolate,prop=null,value=20mil
 	//key=slAnnulusIsolate,prop=null,value=20mil
-    public static class SlAnnulusIsolate extends NoPropObject {}
+    public static class SlAnnulusIsolate extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=slThermalIsolate,prop=null,value=10mil
 	//key=slThermalIsolate,prop=null,value=10mil
-    public static class SlThermalIsolate extends NoPropObject {}
+    public static class SlThermalIsolate extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
 	//key=slAnnulusRestring,prop=null,value=0
 	//key=slAnnulusRestring,prop=null,value=1
-    public static class SlAnnulusRestring extends NoPropObject {}
+    public static class SlAnnulusRestring extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=slThermalRestring,prop=null,value=1
 	//key=slThermalRestring,prop=null,value=1
-    public static class SlThermalRestring extends NoPropObject {}
+    public static class SlThermalRestring extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=slThermalsForVias,prop=null,value=0
 	//key=slThermalsForVias,prop=null,value=0
-    public static class SlThermalsForVias extends NoPropObject {}
+    public static class SlThermalsForVias extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=checkGrid,prop=null,value=0
 	//key=checkGrid,prop=null,value=0
-    public static class CheckGrid extends NoPropObject {}
+    public static class CheckGrid extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=checkAngle,prop=null,value=0
 	//key=checkAngle,prop=null,value=0
-    public static class CheckAngle extends NoPropObject {}
+    public static class CheckAngle extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=checkFont,prop=null,value=1
 	//key=checkFont,prop=null,value=1
-    public static class CheckFont extends NoPropObject {}
+    public static class CheckFont extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=checkRestrict,prop=null,value=0
 	//key=checkRestrict,prop=null,value=1
-    public static class CheckRestrict extends NoPropObject {}
+    public static class CheckRestrict extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=useDiameter,prop=null,value=13
 	//key=useDiameter,prop=null,value=13
-    public static class UseDiameter extends NoPropObject {}
+    public static class UseDiameter extends NoPropObject {
+    	//Use getInt();
+    }
 	//key=maxErrors,prop=null,value=50
 	//key=maxErrors,prop=null,value=50
-    public static class MaxErrors extends NoPropObject {}
+    public static class MaxErrors extends NoPropObject {
+    	//Use getInt();
+    }
 
 }

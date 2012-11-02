@@ -1,9 +1,12 @@
 package st.tori.eagle.parser.draw;
 
+import st.tori.eagle.parser.dru.EagleDru;
 import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Eagle;
 import st.tori.eagle.parser.parse.AbstractEagleParser.XYPosition;
 
 public class DrawManager extends PackageContainer {
+	
+	public EagleDru dru;
 	
 	double origW;
 	double origH;
@@ -13,7 +16,8 @@ public class DrawManager extends PackageContainer {
 	double paddingY = 50;
 	XYPosition minXY;
 	
-	public DrawManager(Eagle eagle) {
+	public DrawManager(EagleDru dru, Eagle eagle) {
+		this.dru = dru;
 		origW = eagle.maxXY.x - eagle.minXY.x;
 		origH = eagle.maxXY.y - eagle.minXY.y;
 		minXY = eagle.minXY;

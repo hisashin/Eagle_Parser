@@ -1502,7 +1502,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad) throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
 			di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
-			if(diameter==0)diameter = drill*2;
+			if(diameter==0)diameter = drill*(1+m.dru.rvPadTop.getDouble()*2);
 			double width = (diameter-drill)/2;
 			di.setStrokeWidth(m.scale(width));
 			double[] _xy = DrawManager.convert(new double[]{0,0}, x, y, rot.getRad());

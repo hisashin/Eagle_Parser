@@ -8,6 +8,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import st.tori.eagle.parser.draw.AbstractEagleDrawer;
 import st.tori.eagle.parser.draw.EagleDrawerFactory;
+import st.tori.eagle.parser.dru.EagleDru;
 import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Eagle;
 import st.tori.eagle.parser.exception.EagleParserException;
 import st.tori.eagle.parser.parse.AbstractEagleParser;
@@ -27,7 +28,7 @@ public class Main extends DefaultHandler {
 		}
 		AbstractEagleDrawer drawer = EagleDrawerFactory.newInstance();
 		try {
-			drawer.draw(eagle,"/Users/shingo/Desktop/eagle/");
+			drawer.draw(EagleDru.DRU_DEFAULT,eagle,"/Users/shingo/Desktop/eagle/");
 		} catch (MagickException e) {
 			e.printStackTrace();
 		}
