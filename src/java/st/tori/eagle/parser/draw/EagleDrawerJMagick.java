@@ -19,21 +19,37 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 		ImageInfo ii = new ImageInfo("xc:white");
 		System.out.println("size:"+m.getImageWidth()+","+m.getImageHeight());
 		ii.setSize(m.getImageWidth()+"x"+m.getImageHeight());
+		ii.setSize("3000x3000");
 		
 		MagickImage mi = new MagickImage(ii);
-		//eagle.draw(m,mi,ii);
-		drawLine(m,mi,ii);
+		eagle.draw(m,mi,ii);
+		//draw(m,mi,ii);
+		drawLine(m,mi,ii,30,120,463,120);	//OK(433)
+		drawLine(m,mi,ii,30,150,464,150);	//NG
+		
+		drawLine(m,mi,ii,30,200,30,768);	//OK(668)
+		drawLine(m,mi,ii,60,200,60,769);	//NG
+		
+		drawLine(m,mi,ii,1409.7021276595744,1245.4553191489363, 1409.7021276595744,1270.9872340425532);
+		
 		mi.setFileName(dirPath+"/eagle"+System.currentTimeMillis()+".png");
 		mi.writeImage(new ImageInfo());
 		System.out.println("DRAW END:dirPath="+dirPath);
 	}
 
-	private static void drawLine(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
+	private static void draw(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
 		DrawInfo di = new DrawInfo(ii);
-		di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
-		di.setStrokeWidth(30);
+		di.setStroke(PixelPacket.queryColorDatabase("Red"));
+		di.setStrokeWidth(20);
 		//di.setPrimitive("line 20,10, 980,490");
-		di.setPrimitive("stroke-linecap round line 20,10, 980,490");
+		di.setPrimitive("stroke-linecap round line 20,20 180,20");
+		mi.drawImage(di);
+	}
+	private static void drawLine(DrawManager m, MagickImage mi, ImageInfo ii, double x1, double y1, double x2, double y2) throws MagickException {
+		DrawInfo di = new DrawInfo(ii);
+		di.setStroke(PixelPacket.queryColorDatabase("Red"));
+		di.setStrokeWidth(20);
+		di.setPrimitive("stroke-linecap round line "+x1+","+y1+" "+x2+","+y2);
 		mi.drawImage(di);
 	}
 
