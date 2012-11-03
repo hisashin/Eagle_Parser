@@ -12,6 +12,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import st.tori.eagle.parser.draw.DrawManager;
 import st.tori.eagle.parser.draw.PackageContainer;
+import st.tori.eagle.parser.dru.EagleDru;
 import st.tori.eagle.parser.dtd.AbstractEagleDtd;
 import st.tori.eagle.parser.dtd.AbstractEagleDtd.FileType;
 import st.tori.eagle.parser.dtd.AbstractEagleDtd.HasAttrInterface;
@@ -19,12 +20,14 @@ import st.tori.eagle.parser.dtd.AbstractEagleDtd.HasTextInterface;
 import st.tori.eagle.parser.dtd.AbstractEagleDtd.HasXYPositionInterface;
 import st.tori.eagle.parser.dtd.AbstractEagleDtd.ParentInterface;
 import st.tori.eagle.parser.dtd.EagleDtdFactory;
+import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Designrules;
 import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Eagle;
 import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Element;
 import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Library;
 import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Package;
 import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.PlainInterface;
 import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Wire;
+import st.tori.eagle.parser.exception.DruParserException;
 import st.tori.eagle.parser.exception.EagleParserException;
 
 public class EagleParserSAX extends AbstractEagleParser {
@@ -112,7 +115,8 @@ public class EagleParserSAX extends AbstractEagleParser {
 					Package pack = lib.packages.get(i);
 					pContainer.addPackage(lib.name, pack.name, pack);
 				}
-			}else if(current instanceof Element) {
+			}
+			if(current instanceof Element) {
 				Element element = (Element)current;
 				Package pack = pContainer.getPackage(element.library, element.packageValue);
 				if(pack!=null) {
@@ -125,6 +129,13 @@ public class EagleParserSAX extends AbstractEagleParser {
 							array[j] = DrawManager.convert(array[j],element.x,element.y,rad);
 						addXYPositions(array);
 					}
+				}
+			}
+			if(current instanceof Designrules) {
+				try {
+					((Designrules)current).parse();
+				} catch (DruParserException e) {
+					e.printStackTrace();
 				}
 			}
 			ParentInterface tmp = parents.remove(0);

@@ -19,11 +19,12 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 		ImageInfo ii = new ImageInfo("xc:white");
 		System.out.println("size:"+m.getImageWidth()+","+m.getImageHeight());
 		ii.setSize(m.getImageWidth()+"x"+m.getImageHeight());
-		ii.setSize("3000x3000");
+		//ii.setSize("3000x3000");
 		
 		MagickImage mi = new MagickImage(ii);
 		eagle.draw(m,mi,ii);
 		//draw(m,mi,ii);
+		/*
 		drawLine(m,mi,ii,30,120,463,120);	//OK(433)
 		drawLine(m,mi,ii,30,150,464,150);	//NG
 		
@@ -31,7 +32,7 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 		drawLine(m,mi,ii,60,200,60,769);	//NG
 		
 		drawLine(m,mi,ii,1409.7021276595744,1245.4553191489363, 1409.7021276595744,1270.9872340425532);
-		
+		*/
 		mi.setFileName(dirPath+"/eagle"+System.currentTimeMillis()+".png");
 		mi.writeImage(new ImageInfo());
 		System.out.println("DRAW END:dirPath="+dirPath);

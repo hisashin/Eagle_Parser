@@ -1,6 +1,7 @@
 package st.tori.eagle.parser.dtd;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import magick.DrawInfo;
@@ -10,6 +11,8 @@ import magick.MagickImage;
 import st.tori.eagle.parser.draw.Color;
 import st.tori.eagle.parser.draw.Color.LayerName;
 import st.tori.eagle.parser.draw.DrawManager;
+import st.tori.eagle.parser.dru.EagleDru;
+import st.tori.eagle.parser.exception.DruParserException;
 import st.tori.eagle.parser.exception.EagleParserException;
 import st.tori.eagle.parser.parse.AbstractEagleParser.XYPosition;
 
@@ -1273,7 +1276,16 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		public void draw(DrawManager m, MagickImage mi, ImageInfo ii,
 				double offsetX, double offsetY, double rad)
 				throws MagickException {
-			// TODO Auto-generated method stub
+			if(text==null||text.startsWith(">"))return;
+			DrawInfo di = new DrawInfo(ii);
+			Color color = Color.get(layer);
+			di.setFill(color.pixelPacket);
+			di.setFont("Candice");
+			di.setPointsize(size*100);
+			double[] _xy = DrawManager.convert(new double[]{x,y}, offsetX, offsetY, rad);
+			di.setPrimitive("rotate "+rot.getDeg()+" text " + m.x(_xy[0]) + ","
+					+ m.y(_xy[1]) + " '" + text + "'");
+			mi.drawImage(di);
 		}
 
 		@Override
@@ -2347,6 +2359,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 	public static class Designrules implements ParentInterface,
 			HasAttrInterface {
+		
+		public EagleDru dru = new EagleDru();
 		List<Description> descriptionList = new ArrayList<Description>();
 		List<Param> paramList = new ArrayList<Param>();
 
@@ -2358,6 +2372,10 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				paramList.add((Param) child);
 		}
 
+		public void parse() throws DruParserException {
+			dru.parse(descriptionList, paramList);
+		}
+		
 		// attr
 		String name;
 
@@ -2522,7 +2540,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		}
 
 		// attr
-		Language language = new Language("en");
+		public Language language = new Language("en");
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -2538,8 +2556,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 	public static class Param implements HasAttrInterface {
 		// attr
-		String name;
-		String value;
+		public String name;
+		public String value;
 
 		@Override
 		public void setAttr(String qName, String value) {
@@ -2607,7 +2625,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 	// ----------------------------------------
 
 	private static class SimpleStringObject {
-		String value;
+		public String value;
 
 		SimpleStringObject(String value) {
 			this.value = value;
@@ -2622,12 +2640,19 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 		static double deg2rad = Math.PI / 180;
 
 		public double getRad() {
-			if (value == null || value.length() <= 1)
+			return getDeg()*deg2rad;
+		}
+		public double getDeg() {
+			if (value == null)
 				return 0;
-			if (value.startsWith("L"))
-				return Double.parseDouble(value.substring(1)) * deg2rad;
-			if (value.startsWith("R"))
-				return (360 - Double.parseDouble(value.substring(1))) * deg2rad;
+			else if (value.startsWith("L"))
+				return Double.parseDouble(value.substring(1));
+			else if (value.startsWith("R"))
+				return (360 - Double.parseDouble(value.substring(1)));
+			else if (value.startsWith("SL"))
+				return Double.parseDouble(value.substring(2));
+			else if (value.startsWith("SR"))
+				return (360 - Double.parseDouble(value.substring(2)));
 			return 0;
 		}
 	}

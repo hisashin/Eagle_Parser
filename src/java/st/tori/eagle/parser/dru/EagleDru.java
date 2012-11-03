@@ -6,10 +6,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Param;
 import st.tori.eagle.parser.exception.DruParserException;
 
 public class EagleDru {
@@ -73,6 +76,21 @@ public class EagleDru {
 	    }
 	}
 	
+	public final void parse(List<st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Description> descriptionList, List<Param> paramList) throws DruParserException {
+		Iterator<st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Description> iteDesc = descriptionList.iterator();
+		while(iteDesc.hasNext()) {
+			st.tori.eagle.parser.dtd.EagleDtd_6_3_0.Description obj = iteDesc.next();
+			description.put(obj.language.value, obj.getText());
+		}
+		Iterator<Param> iteParam = paramList.iterator();
+		while(iteParam.hasNext()) {
+			Param param = iteParam.next();
+			Object obj = getInstance(param.name);
+			if(obj==null||!(obj instanceof NoPropObject))
+				throw new DruParserException("Cannot create instance for key="+param.name);
+			((NoPropObject)obj).put(param.value);
+		}
+	}
 	public final void parse(String druFilePath) throws DruParserException {
 		File file = new File(druFilePath);
 		BufferedReader buffReader = null;
