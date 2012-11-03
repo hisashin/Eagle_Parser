@@ -19,6 +19,7 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 		ImageInfo ii = new ImageInfo("xc:white");
 		System.out.println("size:"+m.getImageWidth()+","+m.getImageHeight());
 		ii.setSize(m.getImageWidth()+"x"+m.getImageHeight());
+		ii.setSize("550x550");
 		
 		MagickImage mi = new MagickImage(ii);
 		//eagle.draw(m,mi,ii);
@@ -30,10 +31,10 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 
 	private static void drawLine(DrawManager m, MagickImage mi, ImageInfo ii) throws MagickException {
 		DrawInfo di = new DrawInfo(ii);
-		di.setStroke(new PixelPacket(0xbb*256, 0xdd*256, 0xff*256, 0));
-		di.setStrokeWidth(30);
+		di.setStroke(PixelPacket.queryColorDatabase("Red"));
+		di.setStrokeWidth(20);
 		//di.setPrimitive("line 20,10, 980,490");
-		di.setPrimitive("stroke-linecap round line 20,10, 980,490");
+		di.setPrimitive("stroke-linecap round line 20,20 180,20");
 		mi.drawImage(di);
 	}
 
