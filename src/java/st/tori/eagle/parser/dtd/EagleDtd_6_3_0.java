@@ -1285,13 +1285,14 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			double[] _xy = DrawManager.convert(new double[] { x, y }, offsetX,
 					offsetY, rad);
 			double deg = rot.getDeg();
-			if ("ARF".equals(text)) {
-				System.out.println("deg1=" + deg);
-			}else if("D0".equals(text)) {
-				System.out.println("deg2=" + deg);
+			if("HARPY ADK Board".equals(text)) {
+				boolean reversed = rot.isReversed();
+				System.out.println("reversed="+reversed);
 			}
 			//di.setPrimitive(((deg != 0) ? ("rotate " + deg) : "") + " text " + m.x(_xy[0]) + "," + m.y(_xy[1]) + " '" + text + "'");
 			di.setPrimitive("translate " + m.x(_xy[0]) + "," + m.y(_xy[1]) + " rotate " + deg + " text 0,0 '" + text + "'");
+			if(rot.isReversed())
+				di.set
 			mi.drawImage(di);
 		}
 
@@ -1756,6 +1757,8 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			double rad = rot.getRad();
 			for (int i = 0; i < pack.elements.size(); i++)
 				pack.elements.get(i).draw(m, mi, ii, x, y, rad);
+			for (int i = 0; i < attributeList.size(); i++)
+				attributeList.get(i).draw(m, mi, ii, 0, 0, 0, this);
 		}
 
 		@Override
@@ -2256,6 +2259,25 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			return new double[][] { { x, y } };
 		}
 
+		public void draw(DrawManager m, MagickImage mi, ImageInfo ii, double offsetX, double offsetY, double rad, Element element) throws MagickException {
+			if(display==AttributeDisplay.off)return;
+			String text = null;
+			if("NAME".equals(name))
+				text = element.name;
+			else if("VALUE".equals(name))
+				text = element.value;
+			if(text!=null && text.length()>0) {
+				DrawInfo di = new DrawInfo(ii);
+				Color color = Color.get(layer);
+				di.setFill(color.pixelPacket);
+				di.setPointsize(size * 100);
+				double[] _xy = DrawManager.convert(new double[] { x, y }, offsetX, offsetY, rad);
+				double deg = rot.getDeg();
+				di.setPrimitive("translate " + m.x(_xy[0]) + "," + m.y(_xy[1]) + " rotate " + deg + " text 0,0 '" + element.name + "'");
+				mi.drawImage(di);
+			}
+		}
+
 		@Override
 		public void setAttr(String qName, String value) {
 			if ("name".equals(qName))
@@ -2646,10 +2668,13 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 
 		static double deg2rad = Math.PI / 180;
 
+		public boolean isReversed() {
+			return (value.startsWith("SML")||value.startsWith("SMR"));
+		}
+		
 		public double getRad() {
 			return getDeg() * deg2rad;
 		}
-
 		public double getDeg() {
 			double deg;
 			if (value == null)
@@ -2662,6 +2687,10 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				deg = Double.parseDouble(value.substring(2));
 			else if (value.startsWith("SR"))
 				deg = (360 - Double.parseDouble(value.substring(2)));
+			else if (value.startsWith("SML"))
+				deg = Double.parseDouble(value.substring(3));
+			else if (value.startsWith("SMR"))
+				deg = (360 - Double.parseDouble(value.substring(3)));
 			else
 				deg = 0;
 			while(deg>=360)deg -= 360;

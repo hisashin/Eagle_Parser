@@ -19,7 +19,6 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 		ImageInfo ii = new ImageInfo("xc:white");
 		System.out.println("size:"+m.getImageWidth()+","+m.getImageHeight());
 		ii.setSize(m.getImageWidth()+"x"+m.getImageHeight());
-		ii.setSize("550x550");
 		
 		MagickImage mi = new MagickImage(ii);
 		eagle.draw(m,mi,ii);
