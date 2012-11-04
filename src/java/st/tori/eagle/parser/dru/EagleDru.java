@@ -216,6 +216,8 @@ public class EagleDru {
 	public CheckRestrict checkRestrict = new CheckRestrict();
 	public UseDiameter useDiameter = new UseDiameter();
 	public MaxErrors maxErrors = new MaxErrors();
+	public DpMaxLengthDifference dpMaxLengthDifference = new DpMaxLengthDifference();
+	public DpGapFactor dpGapFactor = new DpGapFactor();
 	
 	Object getInstance(String qName) throws DruParserException {
 		if ("description".equals(qName))return description;
@@ -290,6 +292,9 @@ public class EagleDru {
 		else if("checkRestrict".equals(qName))return checkRestrict;
 		else if("useDiameter".equals(qName))return useDiameter;
 		else if("maxErrors".equals(qName))return maxErrors;
+		
+		else if("dpMaxLengthDifference".equals(qName))return dpMaxLengthDifference;
+		else if("dpGapFactor".equals(qName))return dpGapFactor;
 		throw new DruParserException("Unkown qName '" + qName + "'");
 	}
 	/*
@@ -659,6 +664,15 @@ public class EagleDru {
 	//key=maxErrors,prop=null,value=50
     public static class MaxErrors extends NoPropObject {
     	//Use getInt();
+    }
+    
+    //<param name="dpMaxLengthDifference" value="10mm"/>
+    public static class DpMaxLengthDifference extends NoPropObject {
+    	//Use getMil() or getMM();
+    }
+    //<param name="dpGapFactor" value="2.5"/>
+    public static class DpGapFactor extends NoPropObject {
+    	//Use getDouble();
     }
 
 }
