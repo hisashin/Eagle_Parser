@@ -3,6 +3,12 @@ package st.tori.eagle.parser.draw;
 import java.util.HashMap;
 import java.util.Map;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
+import magick.CompositeOperator;
+import magick.ImageInfo;
+import magick.MagickException;
+import magick.MagickImage;
 import magick.PixelPacket;
 
 public class Color {
@@ -25,16 +31,26 @@ public class Color {
 	int blue;
 	int opacy = 0;
 	
+	public String pattern;
 	public PixelPacket pixelPacket;
 	public String rgb;
 	
 	public Color(int layer,LayerName name,int red,int green,int blue) {
+		init(layer,name,red,green,blue,0,null);
+	}
+	public Color(int layer,LayerName name,int red,int green,int blue,int opacy,String pattern) {
+		init(layer,name,red,green,blue,opacy,pattern);
+	}
+	private void init(int layer,LayerName name,int red,int green,int blue,int opacy,String pattern) {
 		this.layer = layer;
 		this.name = name;
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
-		this.pixelPacket = new PixelPacket(0xbb*red, 0xdd*green, 0xff*blue, 0);
+		this.opacy = opacy;
+		this.pattern = pattern;
+		
+		this.pixelPacket = new PixelPacket(0xbb*red, 0xdd*green, 0xff*blue, opacy);
 		this.rgb = "#"+to2Hex(red)+to2Hex(green)+to2Hex(blue);
 	}
 	private static String to2Hex(int val) {
@@ -102,21 +118,21 @@ public class Color {
 		put(new Color(26,LayerName.bNames,165,165,165));
 		put(new Color(27,LayerName.tValues,165,165,165));
 		put(new Color(28,LayerName.bValues,165,165,165));
-		put(new Color(29,LayerName.tStop,186,186,186));
-		put(new Color(30,LayerName.bStop,140,140,140));
-		put(new Color(31,LayerName.tCream,161,161,161));
-		put(new Color(32,LayerName.bCream,174,174,174));
-		put(new Color(33,LayerName.tFinish,191,192,126));
-		put(new Color(34,LayerName.bFinish,181,181,103));
-		put(new Color(35,LayerName.tGlue,166,166,166));
-		put(new Color(36,LayerName.bGlue,168,168,168));
+		put(new Color(29,LayerName.tStop,186,186,186,0,"HS_BDIAGONAL"));
+		put(new Color(30,LayerName.bStop,140,140,140,0,"HS_FDIAGONAL"));
+		put(new Color(31,LayerName.tCream,161,161,161,0,"HS_BDIAGONAL"));
+		put(new Color(32,LayerName.bCream,174,174,174,0,"HS_FDIAGONAL"));
+		put(new Color(33,LayerName.tFinish,191,192,126,0,"HS_BDIAGONAL"));
+		put(new Color(34,LayerName.bFinish,181,181,103,0,"HS_FDIAGONAL"));
+		put(new Color(35,LayerName.tGlue,166,166,166,0,"HS_BDIAGONAL"));
+		put(new Color(36,LayerName.bGlue,168,168,168,0,"HS_FDIAGONAL"));
 		put(new Color(37,LayerName.tTest,165,165,165));
 		put(new Color(38,LayerName.bTest,165,165,165));
-		put(new Color(39,LayerName.tKeepout,178,101,99));
-		put(new Color(40,LayerName.bKeepout,126,124,190));
-		put(new Color(41,LayerName.tRestrict,160,65,62));
-		put(new Color(42,LayerName.bRestrict,118,120,186));
-		put(new Color(43,LayerName.vRestrict,105,182,104));
+		put(new Color(39,LayerName.tKeepout,178,101,99,128,"GRAY95"));
+		put(new Color(40,LayerName.bKeepout,126,124,190,128,"GRAY95"));
+		put(new Color(41,LayerName.tRestrict,160,65,62,128,"GRAY95"));
+		put(new Color(42,LayerName.bRestrict,118,120,186,128,"GRAY95"));
+		put(new Color(43,LayerName.vRestrict,105,182,104,128,"GRAY95"));
 		put(new Color(44,LayerName.Drills,165,165,165));
 		put(new Color(45,LayerName.Holes,165,165,165));
 		put(new Color(46,LayerName.Milling,75,165,165));

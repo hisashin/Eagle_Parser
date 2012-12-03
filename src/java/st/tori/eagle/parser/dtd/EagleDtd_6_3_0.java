@@ -3,11 +3,13 @@ package st.tori.eagle.parser.dtd;
 import java.util.ArrayList;
 import java.util.List;
 
+import magick.CompositeOperator;
 import magick.DrawInfo;
 import magick.GravityType;
 import magick.ImageInfo;
 import magick.MagickException;
 import magick.MagickImage;
+import magick.PixelPacket;
 import st.tori.eagle.parser.draw.Color;
 import st.tori.eagle.parser.draw.Color.LayerName;
 import st.tori.eagle.parser.draw.DrawManager;
@@ -1291,8 +1293,6 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			}
 			//di.setPrimitive(((deg != 0) ? ("rotate " + deg) : "") + " text " + m.x(_xy[0]) + "," + m.y(_xy[1]) + " '" + text + "'");
 			di.setPrimitive("translate " + m.x(_xy[0]) + "," + m.y(_xy[1]) + " rotate " + deg + " text 0,0 '" + text + "'");
-			if(rot.isReversed())
-				di.set
 			mi.drawImage(di);
 		}
 
@@ -1399,7 +1399,7 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 				double offsetX, double offsetY, double rad)
 				throws MagickException {
 			DrawInfo di = new DrawInfo(ii);
-			di.setStroke(Color.get(layer).pixelPacket);
+			Color color = Color.get(layer);
 			double dx = x2 - x1;
 			double dy = y2 - y1;
 			double x = (x1 + x2) / 2;
@@ -1416,11 +1416,40 @@ public class EagleDtd_6_3_0 extends AbstractEagleDtd {
 			double[] _xy4 = DrawManager.convert(
 					new double[] { -dx / 2, +dy / 2 }, x, y, rot.getRad());
 			_xy4 = DrawManager.convert(_xy4, offsetX, offsetY, rad);
-			di.setPrimitive("fill " + Color.get(layer).rgb + " polygon "
-					+ m.x(_xy1[0]) + "," + m.y(_xy1[1]) + ", " + m.x(_xy2[0])
-					+ "," + m.y(_xy2[1]) + ", " + m.x(_xy3[0]) + ","
-					+ m.y(_xy3[1]) + ", " + m.x(_xy4[0]) + "," + m.y(_xy4[1]));
-			mi.drawImage(di);
+			
+			di.setStroke(color.pixelPacket);
+			if(color.pattern!=null) {
+				di.setStrokeWidth(1);
+				/*
+				int radius = (int)(Math.sqrt(dx*dx+dy*dy)+2);
+				int diameter = radius * 2;
+				ImageInfo _iiP = new ImageInfo("pattern:"+color.pattern);
+				_iiP.setSize(diameter+"x"+diameter);
+				ImageInfo _iiB = new ImageInfo("xc:"+color.rgb);
+				_iiB.setSize(diameter+"x"+diameter);
+				ImageInfo _iiN = new ImageInfo("xc:none");
+				_iiN.setSize(diameter+"x"+diameter);
+				MagickImage _miB = new MagickImage(_iiB);
+				_miB.compositeImage(CompositeOperator.BlendCompositeOp, new MagickImage(_iiP), 0, 0);
+				//_miB.transparentImage(new PixelPacket(255,255,255,0), 255);
+				MagickImage _miN = new MagickImage(_iiN);
+				_miB.compositeImage(CompositeOperator.HueCompositeOp, _miN, 0, 0);
+				//di.setTile(_miB);
+				//mi.compositeImage(CompositeOperator.HueCompositeOp, _miB, (int)m.x(x-radius), (int)m.y(y-radius));
+				*/
+				di.setPrimitive("fill_pattern pattern:"+color.pattern+" polygon "
+						+ m.x(_xy1[0]) + "," + m.y(_xy1[1]) + ", " + m.x(_xy2[0])
+						+ "," + m.y(_xy2[1]) + ", " + m.x(_xy3[0]) + ","
+						+ m.y(_xy3[1]) + ", " + m.x(_xy4[0]) + "," + m.y(_xy4[1]));
+				mi.drawImage(di);
+				
+			} else {
+				di.setPrimitive("fill "+color.rgb+" polygon "
+						+ m.x(_xy1[0]) + "," + m.y(_xy1[1]) + ", " + m.x(_xy2[0])
+						+ "," + m.y(_xy2[1]) + ", " + m.x(_xy3[0]) + ","
+						+ m.y(_xy3[1]) + ", " + m.x(_xy4[0]) + "," + m.y(_xy4[1]));
+				mi.drawImage(di);
+			}
 		}
 
 		@Override
