@@ -16,15 +16,16 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 	public void draw(Eagle eagle, DrawManager m, String dirPath) throws MagickException {
 		System.out.println("DRAW START:dirPath="+dirPath);
 		new File(dirPath).mkdirs();
-		ImageInfo ii = new ImageInfo("xc:none");
+		//ImageInfo ii = new ImageInfo("xc:none");
+		ImageInfo ii = new ImageInfo("xc:white");
 		//ImageInfo ii = new ImageInfo("xc:green");
 		System.out.println("size:"+m.getImageWidth()+","+m.getImageHeight());
-		//ii.setSize(m.getImageWidth()+"x"+m.getImageHeight());
-		ii.setSize("450x450");
+		ii.setSize(m.getImageWidth()+"x"+m.getImageHeight());
+		//ii.setSize("450x450");
 		//ii.setSize((62*50)+"x100");
 		
 		MagickImage mi = new MagickImage(ii);
-		//eagle.draw(m,mi,ii);
+		eagle.draw(m,mi,ii);
 		/*
 		draw(m,mi,ii);
 		drawLine(m,mi,ii,30,120,463,120);	//OK(433)
@@ -40,6 +41,7 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 		}
 		*/
 		//rectangleWithPattern2(m,mi,ii);
+		/*
 		{
 			ImageInfo _iiB = new ImageInfo("xc:blue");
 			_iiB.setSize("150x150");
@@ -51,6 +53,7 @@ public class EagleDrawerJMagick extends AbstractEagleDrawer {
 			_mi.transparentImage(PixelPacket.queryColorDatabase("white"), 255);
 			mi.compositeImage(CompositeOperator.BlendCompositeOp, _mi, 150, 150);
 		}
+		*/
 		mi.setFileName(dirPath+"/eagle"+System.currentTimeMillis()+".png");
 		mi.writeImage(new ImageInfo());
 		System.out.println("DRAW END:dirPath="+dirPath);
